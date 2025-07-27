@@ -31,6 +31,7 @@ def display_pdf_preview(input_file):
 def find_month(lines):
     matches = []
     for line in lines:
+        st.write(line)
         month_pattern = r'(January|February|March|April|May|June|July|August|September|October|November|December)'
         match = re.search(month_pattern, line, re.IGNORECASE)
         if match:
