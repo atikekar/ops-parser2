@@ -157,9 +157,16 @@ def execute():
 
         for i, page in enumerate(pdf.pages):
             text = page.extract_text()
-            table = page.extract_table()
-            st.write(table)
             lines = text.splitlines() if text else []
+
+            table = page.extract_table()
+            table_with_x = []
+            if table:
+                for row in table:
+                    new_row = [cell.replace(' ', 'X') if cell else '' for cell in row]
+                    table_with_x.append(' X '.join(new_row))  # Maintain spacing by joining with ' X '
+
+            st.write(table_with_x)
             page_num = i + 1
 
             progress_bar.progress(min(10 + ((i + 1) * 10), 90), f"Processing page {i + 1} of {len(pdf.pages)}")
