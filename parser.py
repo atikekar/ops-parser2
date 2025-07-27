@@ -75,21 +75,25 @@ def find_name(lines):
     else:
         return matches[0]
 
+#returns the top and bottom lines of the table
+def extract(lines):
+    relevant_lines = []
+    for line in lines:
+        stripped = line.strip()
+        if re.match(r'^\d', stripped) or stripped.startswith("Date") or stripped.startswith("Day"):
+            relevant_lines.append(line)
+    return relevant_lines
+
 # Extract total energy from the "Energy" column in the table
-def find_total_energy(extracted_data):
+def find_total_energy(page_lines):
     total_energy = []
     # Loop through all rows in the extracted table
-    for row in extracted_data:
-        st.write(f"Processing row: {row}")  # Debugging line to see the row content
-        # Look for "Energy" in the table header and extract the column index
-        if "Energy" in row:
-            energy_index = row.index("Energy")  # Find the column of interest
-            continue
-        # Check if the row has numeric values (energy values)
-        if len(row) > energy_index and row[energy_index].replace('.', '', 1).isdigit():
-            total_energy.append(row[energy_index])  # Append energy value
+    table = extract(page_lines)
 
-    return total_energy  # Return the list of energy values
+    for row in table:
+        st.write(row)
+
+    return 100  # Return the list of energy values
 
 # Function to generate page data and CSV
 def find_page_data(page, page_num):
