@@ -96,17 +96,17 @@ def find_total_energy(page_lines):
     return 100  # Return the list of energy values
 
 # Function to generate page data and CSV
-def find_page_data(page, data, page_num):
+def find_page_data(page, page_num):
     page_data = []
     st.write(page)
-    st.write(data)
+    
     month_in = find_month(page)
     st.write(month_in)
     year_in = find_year(page)
     st.write(year_in)
     name_in = find_name(page)  # Pass the file_bytes to find_name
     st.write(name_in)
-    total_in = find_total_energy(data)
+    total_in = find_total_energy(page)
     st.write(total_in)
     page_data.append(Page(page_num, month_in, year_in, name_in, total_in))
 
@@ -156,15 +156,15 @@ def execute():
         st.write(f"Total pages in PDF: {len(pdf.pages)}")
 
         for i, page in enumerate(pdf.pages):
-            text = page.extract_text()
-            table = page.extract_table()
-            st.write(table)
+            text = page.extract_text(layout=True)
+            #table = page.extract_table()
+            st.write(text)
             lines = text.splitlines() if text else []
             page_num = i + 1
 
             progress_bar.progress(min(10 + ((i + 1) * 10), 90), f"Processing page {i + 1} of {len(pdf.pages)}")
             st.write("Extracting data from page", page_num)
-            page_data.append(find_page_data(lines, table, page_num))
+            page_data.append(find_page_data(lines, page_num))
 
     input_file_name = input_file.name if input_file.name else "extracted_data.pdf"
     csv_name = input_file_name.replace('.pdf', '_data.csv')
