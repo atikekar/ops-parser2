@@ -139,25 +139,28 @@ def execute():
     #input_path = './sample1.pdf'
     #input_file = open(input_path, "rb")
 
-    if input_file is not None:
+    if input_file is None: return "No file uploaded. Please upload a PDF file to proceed."
 
-        progress_bar = st.progress(0, "Converting PDF to images...")
+    progress_bar = st.progress(0, "Converting PDF to images...")
 
-        extracted_text = []
-        extracted_table = []
+    extracted_text = []
+    extracted_table = []
 
-        with pdfplumber.open(input_file) as pdf:
-            if not pdf.pages:
-                st.error("The PDF file is empty or has no pages.")
-                return
-            progress_bar.progress(10, "PDF opened successfully.")
-            for page in pdf.pages:
-                extracted_text.append(page.extract_text())
-                extracted_table.append(page.extract_table())
-
-        progress_bar.progress(50, "Extracting text from images...")
+    with pdfplumber.open(input_file) as pdf:
+        if not pdf.pages:
+            st.error("The PDF file is empty or has no pages.")
+            return
         
-        progress_bar.progress(75, "Converting to CSV file.")
+        progress_bar.progress(10, "PDF opened successfully.")
+
+        for i, page in enumerate(pdf.pages):
+            st.write(page.extract_text())
+            extracted_text.append(page.extract_text())
+            st.write(page.extract_table())
+            extracted_table.append(page.extract_table())
+            progress_bar.progress((i + 1) / len(pdf.pages) * 50, f"Processing page {i + 1} of {len(pdf.pages)}...")
+    
+        progress_bar.progress(50, "Extracting data from file.")
         page_data = find_page_data(extracted_text, extracted_table)
 
         input_file_name = input_file.name if input_file.name else "extracted_data.pdf"
