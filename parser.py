@@ -158,7 +158,7 @@ def execute():
             extracted_text.append(page.extract_text())
             st.write(page.extract_table())
             extracted_table.append(page.extract_table())
-            progress_bar.progress((i + 1) / len(pdf.pages) * 50, f"Processing page {i + 1} of {len(pdf.pages)}...")
+            progress_bar.progress((10 + ((i + 1) * 10)), "Processing page {i + 1}")
     
     progress_bar.progress(50, "Extracting data from file.")
     page_data = find_page_data(extracted_text, extracted_table)
