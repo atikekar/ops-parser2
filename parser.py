@@ -161,7 +161,7 @@ def execute():
         st.write(f"Total pages in PDF: {len(pdf.pages)}")
 
         for i, page in enumerate(pdf.pages):
-            data = page.extract_data()
+            data = page.extract_tables()
             lines = data.splitlines() if data else []
             page_num = i + 1
 
