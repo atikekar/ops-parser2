@@ -155,7 +155,7 @@ def execute():
         for i, page in enumerate(pdf.pages):
             lines = page.extract_text_lines()
             for line in lines: 
-                st.write(line)  # Display each line in the Streamlit app
+                print(line)
             extracted_text.append(lines)
             progress_bar.progress((10 + ((i + 1) * 10)), "Processing page {i + 1}")
     
