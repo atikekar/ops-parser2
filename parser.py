@@ -172,5 +172,4 @@ def execute():
         mime='text/csv'
     )
 
-st.write("## PDF Processing Application")
 execute()
