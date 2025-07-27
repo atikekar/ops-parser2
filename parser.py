@@ -93,15 +93,13 @@ def extract(lines):
 # Extract total energy from the "Energy" column in the table
 def find_total_energy(page_lines):
 
-    for row in page_lines:
-        st.write(row)
-
     return 100  # Return the list of energy values
 
 # Function to generate page data and CSV
 def find_page_data(page, data, page_num):
     page_data = []
-
+    st.write(page)
+    st.write(data)
     month_in = find_month(page)
     st.write(month_in)
     year_in = find_year(page)
