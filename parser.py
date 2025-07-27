@@ -160,22 +160,22 @@ def execute():
             extracted_table.append(page.extract_table())
             progress_bar.progress((i + 1) / len(pdf.pages) * 50, f"Processing page {i + 1} of {len(pdf.pages)}...")
     
-        progress_bar.progress(50, "Extracting data from file.")
-        page_data = find_page_data(extracted_text, extracted_table)
+    progress_bar.progress(50, "Extracting data from file.")
+    page_data = find_page_data(extracted_text, extracted_table)
 
-        input_file_name = input_file.name if input_file.name else "extracted_data.pdf"
-        csv_name = input_file_name.replace('.pdf', '_data.csv')
+    input_file_name = input_file.name if input_file.name else "extracted_data.pdf"
+    csv_name = input_file_name.replace('.pdf', '_data.csv')
 
-        output_csv_path = "/tmp/extracted_data.csv"
-        save_to_csv(page_data, output_csv_path)
-        
-        progress_bar.progress(100, "CSV file created successfully.")
-        st.download_button(
-            label="Download CSV File",
-            data=open(output_csv_path, 'rb').read(),
-            file_name=csv_name,
-            mime='text/csv'
-        )
+    output_csv_path = "/tmp/extracted_data.csv"
+    save_to_csv(page_data, output_csv_path)
+    
+    progress_bar.progress(100, "CSV file created successfully.")
+    st.download_button(
+        label="Download CSV File",
+        data=open(output_csv_path, 'rb').read(),
+        file_name=csv_name,
+        mime='text/csv'
+    )
 
 st.write("## PDF Processing Application")
 execute()
