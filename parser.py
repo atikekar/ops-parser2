@@ -94,7 +94,7 @@ def find_total_energy(extracted_data):
     return total_energy  # Return the list of energy values
 
 # Function to generate page data and CSV
-def find_page_data(extracted_text, extracted_data, file_bytes=None):
+def find_page_data(extracted_text):
     page_data = []
 
     st.write(f"Total pages in PDF: {len(extracted_text)}")
@@ -106,7 +106,7 @@ def find_page_data(extracted_text, extracted_data, file_bytes=None):
         st.write(year_in)
         name_in = find_name(page)  # Pass the file_bytes to find_name
         st.write(name_in)
-        total_in = find_total_energy(extracted_data[i])
+        total_in = find_total_energy(page)
         st.write(total_in)
         page_data.append(Page(i + 1, month_in, year_in, name_in, total_in))
 
@@ -144,7 +144,6 @@ def execute():
     progress_bar = st.progress(0, "Converting PDF to images...")
 
     extracted_text = []
-    extracted_table = []
 
     with pdfplumber.open(input_file) as pdf:
         if not pdf.pages:
@@ -154,14 +153,13 @@ def execute():
         progress_bar.progress(10, "PDF opened successfully.")
 
         for i, page in enumerate(pdf.pages):
-            st.write(page.extract_text())
-            extracted_text.append(page.extract_text())
-            st.write(page.extract_table())
-            extracted_table.append(page.extract_table())
+            lines = page.extract_text_lines()
+            st.write(lines)
+            extracted_text.append(lines)
             progress_bar.progress((10 + ((i + 1) * 10)), "Processing page {i + 1}")
     
     progress_bar.progress(50, "Extracting data from file.")
-    page_data = find_page_data(extracted_text, extracted_table)
+    page_data = find_page_data(extracted_text)
 
     input_file_name = input_file.name if input_file.name else "extracted_data.pdf"
     csv_name = input_file_name.replace('.pdf', '_data.csv')
