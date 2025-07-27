@@ -161,19 +161,13 @@ def execute():
         st.write(f"Total pages in PDF: {len(pdf.pages)}")
 
         for i, page in enumerate(pdf.pages):
-            raw_text = page.extract_text()
-            raw_lines = raw_text.splitlines() if raw_text else []
+            data = page.extract_data()
+            lines = data.splitlines() if data else []
             page_num = i + 1
-
-            # 🔧 Clean lines: replace large gaps with " X "
-            processed_lines = []
-            for line in raw_lines:
-                cleaned = re.sub(r'(\s{2,}|\t+)', ' X ', line.strip())
-                processed_lines.append(cleaned)
 
             progress_bar.progress(min(10 + ((i + 1) * 10), 90), f"Processing page {i + 1} of {len(pdf.pages)}")
             st.write("Extracting data from page", page_num)
-            page_data.append(find_page_data(processed_lines, page_num))
+            page_data.append(find_page_data(lines, page_num))
 
     input_file_name = input_file.name if input_file.name else "extracted_data.pdf"
     csv_name = input_file_name.replace('.pdf', '_data.csv')
