@@ -92,11 +92,8 @@ def extract(lines):
 
 # Extract total energy from the "Energy" column in the table
 def find_total_energy(page_lines):
-    total_energy = []
-    # Loop through all rows in the extracted table
-    table = extract(page_lines)
 
-    for row in table:
+    for row in page_lines:
         st.write(row)
 
     return 100  # Return the list of energy values
