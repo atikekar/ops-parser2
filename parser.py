@@ -28,9 +28,8 @@ def display_pdf_preview(input_file):
     st.components.v1.html(f'<iframe src="{pdf_data_uri}" width="700" height="500"></iframe>', height=600)
 
 # Extract month from text
-def find_month(text):
+def find_month(lines):
     matches = []
-    lines = text.split('\n')
     for line in lines:
         month_pattern = r'(January|February|March|April|May|June|July|August|September|October|November|December)'
         match = re.search(month_pattern, line, re.IGNORECASE)
@@ -48,9 +47,9 @@ def find_month(text):
     return None
 
 # Extract year from text
-def find_year(text):
+def find_year(lines):
     matches = []
-    lines = text.split('\n')
+
     for line in lines:
         year_pattern = r'\b(20)\d{2}\b'
         match = re.search(year_pattern, line)
@@ -61,9 +60,8 @@ def find_year(text):
     return None
 
 # Extract name from text or fallback to PDF title
-def find_name(text):
+def find_name(lines):
     matches = []
-    lines = text.split('\n')
     for line in lines:
         match = re.search(r'(Name:|Operator:|Facility)[^a-zA-Z0-9]*[:\s-]?\s*(.*)', line, re.IGNORECASE)
         if match:
