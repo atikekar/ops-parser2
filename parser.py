@@ -31,7 +31,6 @@ def display_pdf_preview(input_file):
 def find_month(lines):
     matches = []
     for line in lines:
-        st.write(line)
         month_pattern = r'(January|February|March|April|May|June|July|August|September|October|November|December)'
         match = re.search(month_pattern, line, re.IGNORECASE)
         if match:
@@ -93,21 +92,18 @@ def find_total_energy(extracted_data):
     return total_energy  # Return the list of energy values
 
 # Function to generate page data and CSV
-def find_page_data(extracted_text):
+def find_page_data(page, page_num):
     page_data = []
 
-    st.write(f"Total pages in PDF: {len(extracted_text)}")
-
-    for i, page in enumerate(extracted_text):
-        month_in = find_month(page)
-        st.write(month_in)
-        year_in = find_year(page)
-        st.write(year_in)
-        name_in = find_name(page)  # Pass the file_bytes to find_name
-        st.write(name_in)
-        total_in = find_total_energy(page)
-        st.write(total_in)
-        page_data.append(Page(i + 1, month_in, year_in, name_in, total_in))
+    month_in = find_month(page)
+    st.write(month_in)
+    year_in = find_year(page)
+    st.write(year_in)
+    name_in = find_name(page)  # Pass the file_bytes to find_name
+    st.write(name_in)
+    total_in = find_total_energy(page)
+    st.write(total_in)
+    page_data.append(Page(page_num, month_in, year_in, name_in, total_in))
 
     return page_data
 
@@ -142,7 +138,7 @@ def execute():
 
     progress_bar = st.progress(0, "Converting PDF to images...")
 
-    extracted_text = []
+    page_data = []
 
     with pdfplumber.open(input_file) as pdf:
         if not pdf.pages:
@@ -151,15 +147,16 @@ def execute():
         
         progress_bar.progress(10, "PDF opened successfully.")
 
+        st.write(f"Total pages in PDF: {len(pdf.pages)}")
+
         for i, page in enumerate(pdf.pages):
-            lines = page.extract_text_lines()
-            for line in lines: 
-                print(line)
-            extracted_text.append(lines)
-            progress_bar.progress((10 + ((i + 1) * 10)), "Processing page {i + 1}")
-    
-    progress_bar.progress(50, "Extracting data from file.")
-    page_data = find_page_data(extracted_text)
+            text = page.extract_text()
+            lines = text.splitlines() if text else []
+            page_num = i + 1
+
+            progress_bar.progress(min(10 + ((i + 1) * 10), 90), f"Processing page {i + 1} of {len(pdf.pages)}")
+            st.write("Extracting data from page", page_num)
+            page_data.append(find_page_data(lines, page_num))
 
     input_file_name = input_file.name if input_file.name else "extracted_data.pdf"
     csv_name = input_file_name.replace('.pdf', '_data.csv')
