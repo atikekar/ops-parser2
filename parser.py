@@ -117,9 +117,9 @@ def find_page_data(page, data, page_num):
 # Function to save data to CSV
 def save_to_csv(page_data, output_csv_path):
     csv_data = []
-    for page in page_data:
+    for i, page in enumerate(page_data):
         csv_data.append({
-            "Page": page.page,
+            "Page": i + 1,
             "Month": page.month,
             "Year": page.year,
             "Name": page.name,
@@ -160,6 +160,7 @@ def execute():
         for i, page in enumerate(pdf.pages):
             text = page.extract_text()
             table = page.extract_tables()
+            st.write(table)
             lines = text.splitlines() if text else []
             page_num = i + 1
 
