@@ -81,8 +81,13 @@ def extract(lines):
 
     for line in lines:
         stripped = line.strip()
-        if re.match(r'^\d', stripped) or re.search(r'\b(?:Energy|Total|Usage|Consumption)\b', stripped, re.IGNORECASE):
-            relevant_lines.append(line)
+
+        # Only consider relevant lines
+        if re.match(r'^\d', stripped) or re.search(r'\b(?:Energy|Total|Usage|Consumption|Date|Day)\b', stripped, re.IGNORECASE):
+            # Replace large gaps (2+ spaces or tabs) with ' X '
+            cleaned_line = re.sub(r'(\s{2,}|\t+)', ' X ', stripped)
+            relevant_lines.append(cleaned_line)
+
     return relevant_lines
 
 # Extract total energy from the "Energy" column in the table
