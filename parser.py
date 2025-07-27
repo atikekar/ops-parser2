@@ -78,9 +78,10 @@ def find_name(lines):
 #returns the top and bottom lines of the table
 def extract(lines):
     relevant_lines = []
+
     for line in lines:
         stripped = line.strip()
-        if re.match(r'^\d', stripped) or stripped.startswith("Date") or stripped.startswith("Day"):
+        if re.match(r'^\d', stripped) or re.search(r'\b(?:Energy|Total|Usage|Consumption)\b', stripped, re.IGNORECASE):
             relevant_lines.append(line)
     return relevant_lines
 
