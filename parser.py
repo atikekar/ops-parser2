@@ -17,16 +17,6 @@ class Page:
         self.name = name_in
         self.total = total_in
 
-# Function to display PDF preview in Streamlit
-def display_pdf_preview(input_file):
-    # Convert PDF to base64 for embedding
-    pdf_bytes = input_file.read()
-    pdf_base64 = base64.b64encode(pdf_bytes).decode('utf-8')
-    pdf_data_uri = f"data:application/pdf;base64,{pdf_base64}"
-
-    # Embed the PDF in the Streamlit app using an iframe
-    st.components.v1.html(f'<iframe src="{pdf_data_uri}" width="700" height="500"></iframe>', height=600)
-
 # Extract month from text
 def find_month(lines):
     matches = []
@@ -78,31 +68,27 @@ def find_name(lines):
 def extract_table(lines):
     table_start = 0
     extracted_table = []
-    # Find the header row 
     for i, line in enumerate(lines):
-        # If the first element in the line is a date format, start the table extraction
-        if re.match(r'^\d{1,2}[-/]\d{1,2}[-/]\d{4}', line) or re.match(r'^\d{1,2}[-/]\d{1,2}', line):
-            if table_start == 0: table_start = i
+        if re.match(r'^\d{1,2}[-/]\d{1,2}[-/]\d{4}', line):
+            if table_start == 0:
+                table_start = i
             extracted_table.append(lines[i])
 
-    # Append the header row to the extracted table
-    if table_start > 0:
-        extracted_table.append(lines[table_start])  # assuming the header is right after the first date entry
+    st.write("Extracted Table:", extracted_table)
     return extracted_table
 
 # Function to search for the "Energy" column index
-def search_energy_col(table): 
-    header_row = table[0] if table else []
-    if re.search(r'Energy|Usage|MMBtu', header_row, re.IGNORECASE):
-        energy_index = header_row.index(re.search(r'Energy', header_row, re.IGNORECASE).group(0))
-        st.write(f"Energy column found at index: {energy_index}")
-        return energy_index
+def search_energy_col(table):
+    for row in table: 
+        if re.search(r'Energy|Usage|MMBtu', row, re.IGNORECASE):
+            energy_index = row.index(re.search(r'Energy', row, re.IGNORECASE).group(0))
+            st.write(f"Energy column found at index: {energy_index}")
+            return energy_index
     return -1  # Return -1 if no Energy column is found
 
 # Function to extract all energy values from the "Energy" column
 def find_total_energy(text):
     table = extract_table(text)
-
     index = search_energy_col(table)
     
     if index == -1:
