@@ -16,6 +16,7 @@ class Page:
         self.year = year_in
         self.name = name_in
         self.total = total_in
+
 # Function to display PDF preview in Streamlit
 def display_pdf_preview(input_file):
     # Convert PDF to base64 for embedding
@@ -73,7 +74,7 @@ def find_name(lines):
         return pdf_title
     else:
         return matches[0]
-
+    
 def extract_table(lines):
     table_start = 0
     extracted_table = []
@@ -156,6 +157,7 @@ def save_to_csv(page_data, output_csv_path):
     df = pd.DataFrame(csv_data)
     df.to_csv(output_csv_path, index=False)
     df.to_csv("extracted_data.csv", index=False)
+
 
 # Main function to execute the Streamlit app
 def execute():
