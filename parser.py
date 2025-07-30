@@ -101,7 +101,6 @@ def search_energy_col(table):
 
 # Function to extract all energy values from the "Energy" column
 def find_total_energy(text):
-    st.write(text)
     table = extract_table(text)
 
     index = search_energy_col(table)
@@ -174,9 +173,7 @@ def execute():
     #input_file = open(input_path, "rb")
 
     if input_file is None: return "No file uploaded. Please upload a PDF file to proceed."
-
     progress_bar = st.progress(0, "Converting PDF to images...")
-
     page_data = []
 
     with pdfplumber.open(input_file) as pdf:
@@ -185,11 +182,11 @@ def execute():
             return
         
         progress_bar.progress(10, "PDF opened successfully.")
-
         st.write(f"Total pages in PDF: {len(pdf.pages)}")
 
         for i, page in enumerate(pdf.pages):
             text = page.extract_text(layout=True)
+            st. write(text)
             lines = text.splitlines() if text else []
             page_num = i + 1
 
