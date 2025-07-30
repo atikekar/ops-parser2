@@ -171,7 +171,6 @@ def execute():
 
         for i, page in enumerate(pdf.pages):
             text = page.extract_text(layout=True)
-            st.write(text)
 
             lines = text.splitlines() if text else []
             page_num = i + 1
