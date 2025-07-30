@@ -142,10 +142,10 @@ def execute():
         for i, page in enumerate(pdf.pages):
             text = page.extract_text()
             table = page.extract_table()
-            st.write(table)
+            st.write("Table:", table)
             text = page.extract_text(layout=True)
 
-            st.write(text)
+            st.write("Text:", text)
             lines = text.splitlines() if text else []
             page_num = i + 1
 
