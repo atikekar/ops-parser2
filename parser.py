@@ -114,7 +114,7 @@ def find_total_energy(text):
             return running_total
 
 # Function to generate page data and CSV
-def find_page_data(page, text, page_num):
+def find_page_data(page, page_num):
     page_data = []
 
     month_in = find_month(page)
@@ -123,7 +123,7 @@ def find_page_data(page, text, page_num):
     st.write("YEAR:", year_in)
     name_in = find_name(page)  # Pass the file_bytes to find_name
     st.write("NAME:", name_in)
-    total_in = find_total_energy(text)
+    total_in = find_total_energy(page)
     st.write("TOTAL ENERGY:", total_in)
     page_data.append(Page(page_num, month_in, year_in, name_in, total_in))
 
@@ -172,20 +172,20 @@ def execute():
 
         # Loop through all the pages in the PDF
         for i in range(len(pdf.pages)):
-            text = pdf.pages[i].extract_text(layout=True)
+            lines = pdf.pages[i].extract_table()
 
-            if text:
-                st.write(f"Page {i + 1} Text:")
-                st.text(text)  # Display the extracted text
-            else:
-                st.write(f"Page {i + 1} contains no extractable text.")
+            #if text:
+                #st.write(f"Page {i + 1} Text:")
+                #st.text(text)  # Display the extracted text
+            #else:
+                #st.write(f"Page {i + 1} contains no extractable text.")
 
             # Process the extracted lines
-            lines = text.splitlines() if text else []
+            #lines = text.splitlines() if text else []
             page_num = i + 1
             progress_bar.progress(min(10 + ((i + 1) * 10), 90), f"Processing page {i + 1} of {len(pdf.pages)}")
             # Use your page_data processing function here (if necessary)
-            page_data.append(find_page_data(lines, text, page_num))  # Assuming find_page_data is defined
+            page_data.append(find_page_data(lines, page_num))  # Assuming find_page_data is defined
 
 #----------------------------------------------------------------
 
