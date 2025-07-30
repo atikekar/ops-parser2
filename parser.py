@@ -144,7 +144,6 @@ def save_to_csv(page_data, output_csv_path):
     df.to_csv(output_csv_path, index=False)
     df.to_csv("extracted_data.csv", index=False)
 
-
 # Main function to execute the Streamlit app
 def execute():
 
@@ -161,6 +160,8 @@ def execute():
     progress_bar = st.progress(0, "Converting PDF to images...")
     page_data = []
 
+#----------------------------------------------------------------
+
     with pdfplumber.open(input_file) as pdf:
         if not pdf.pages:
             st.error("The PDF file is empty or has no pages.")
@@ -169,14 +170,24 @@ def execute():
         progress_bar.progress(10, "PDF opened successfully.")
         st.write(f"Total pages in PDF: {len(pdf.pages)}")
 
-        for i in len(pdf.pages):
-            text = pdf.pages[i].extract_text(layout = True)
+        # Loop through all the pages in the PDF
+        for i in range(len(pdf.pages)):
+            text = pdf.pages[i].extract_text(layout=True)
 
+            if text:
+                st.write(f"Page {i + 1} Text:")
+                st.text(text)  # Display the extracted text
+            else:
+                st.write(f"Page {i + 1} contains no extractable text.")
+
+            # Process the extracted lines
             lines = text.splitlines() if text else []
             page_num = i + 1
-
             progress_bar.progress(min(10 + ((i + 1) * 10), 90), f"Processing page {i + 1} of {len(pdf.pages)}")
-            page_data.append(find_page_data(lines, text, page_num))
+            # Use your page_data processing function here (if necessary)
+            page_data.append(find_page_data(lines, text, page_num))  # Assuming find_page_data is defined
+
+#----------------------------------------------------------------
 
     input_file_name = input_file.name if input_file.name else "extracted_data.pdf"
     csv_name = input_file_name.replace('.pdf', '_data.csv')
