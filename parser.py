@@ -16,7 +16,6 @@ class Page:
         self.year = year_in
         self.name = name_in
         self.total = total_in
-
 # Function to display PDF preview in Streamlit
 def display_pdf_preview(input_file):
     # Convert PDF to base64 for embedding
@@ -74,10 +73,6 @@ def find_name(lines):
         return pdf_title
     else:
         return matches[0]
-
-# Replace spaces with 'X' to maintain layout in extracted text
-def replace_spaces_with_X(text):
-    return text.replace(" ", "X")
 
 def extract_table(lines):
     table_start = 0
@@ -188,8 +183,6 @@ def execute():
 
         for i, page in enumerate(pdf.pages):
             text = page.extract_text(layout=True)
-            # Replace spaces with 'X' to maintain layout visibility
-            text = replace_spaces_with_X(text)
             st.write(text)
 
             lines = text.splitlines() if text else []
