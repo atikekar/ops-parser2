@@ -169,8 +169,8 @@ def execute():
         progress_bar.progress(10, "PDF opened successfully.")
         st.write(f"Total pages in PDF: {len(pdf.pages)}")
 
-        for i, page in enumerate(pdf.pages):
-            text = page.extract_text(layout=True)
+        for i in len(pdf.pages):
+            text = pdf.pages[i].extract_text(layout = True)
 
             lines = text.splitlines() if text else []
             page_num = i + 1
