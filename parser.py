@@ -144,14 +144,13 @@ def execute():
             table = page.extract_table()
             st.write(table)
             text = page.extract_text(layout=True)
-            #table = page.extract_table()
+
             st.write(text)
             lines = text.splitlines() if text else []
             page_num = i + 1
 
             progress_bar.progress(min(10 + ((i + 1) * 10), 90), f"Processing page {i + 1} of {len(pdf.pages)}")
             st.write("Extracting data from page", page_num)
-            page_data.append(find_page_data(lines, table, page_num))
             page_data.append(find_page_data(lines, page_num))
 
     input_file_name = input_file.name if input_file.name else "extracted_data.pdf"
