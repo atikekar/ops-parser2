@@ -122,7 +122,6 @@ def find_total_energy(text):
     running_total = 0
 
     for items in energy_values:
-        st.write(f"Energy Value: {items}")
         if running_total != items:
             running_total += items
         else: 
@@ -186,7 +185,8 @@ def execute():
 
         for i, page in enumerate(pdf.pages):
             text = page.extract_text(layout=True)
-            st. write(text)
+            st.write(text)
+
             lines = text.splitlines() if text else []
             page_num = i + 1
 
