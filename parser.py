@@ -100,7 +100,8 @@ def search_energy_col(table):
     return -1  # Return -1 if no Energy column is found
 
 # Function to extract all energy values from the "Energy" column
-def find_total_energy(page_lines):
+def find_total_energy(text):
+    page_lines = text.splitlines() if text else []
     table = extract_table(page_lines)
 
     index = search_energy_col(table)
