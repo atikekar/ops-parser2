@@ -152,13 +152,16 @@ def execute():
 
         # Loop through all the pages in the PDF
         for i in range(len(pdf.pages)):
-            table = pdf.pages[i].extract_table()
+            text = pdf.pages[i].extract_text(layout=True)
 
-            if table:
-                st.write(f"Page {i + 1} Table:")
-                st.write(table)  # Display the extracted table
+            if text:
+                st.write(f"Page {i + 1} Text:")
+                st.text(text)  # Display the extracted text
             else:
-                st.write(f"Page {i + 1} contains no extractable table.")
+                st.write(f"Page {i + 1} contains no extractable text.")
+
+            lines = text.splitlines() if text else []
+            table = [line.split() for line in lines]  # Convert the lines into a table-like structure
 
             page_num = i + 1
             progress_bar.progress(min(10 + ((i + 1) * 10), 90), f"Processing page {i + 1} of {len(pdf.pages)}")
