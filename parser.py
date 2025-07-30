@@ -74,32 +74,68 @@ def find_name(lines):
         return pdf_title
     else:
         return matches[0]
+    
+def extract_table(lines):
+    table_start = 0
+    extracted_table = []
+    # Find the header row 
+    for i, line in enumerate(lines):
+        # If the first element in the line is a date format, start the table extraction
+        if re.match(r'^\d{1,2}[-/]\d{1,2}[-/]\d{4}', line) or re.match(r'^\d{1,2}[-/]\d{1,2}', line):
+            if table_start == 0: table_start = i
+            extracted_table.append(lines[i])
 
-#returns the top and bottom lines of the table
-def extract(lines):
-    relevant_lines = []
+    # Append the header row to the extracted table
+    if table_start > 0:
+        extracted_table.append(lines[table_start])  # assuming the header is right after the first date entry
+    return extracted_table
 
-    for line in lines:
-        stripped = line.strip()
+# Function to search for the "Energy" column index
+def search_energy_col(table): 
+    header_row = table[0] if table else []
+    if re.search(r'Energy|Usage|MMBtu', header_row, re.IGNORECASE):
+        energy_index = header_row.index(re.search(r'Energy', header_row, re.IGNORECASE).group(0))
+        st.write(f"Energy column found at index: {energy_index}")
+        return energy_index
+    return -1  # Return -1 if no Energy column is found
 
-        # Only consider relevant lines
-        if re.match(r'^\d', stripped) or re.search(r'\b(?:Energy|Total|Usage|Consumption|Date|Day)\b', stripped, re.IGNORECASE):
-            # Replace large gaps (2+ spaces or tabs) with ' X '
-            cleaned_line = re.sub(r'(\s{2,}|\t+)', ' X ', stripped)
-            relevant_lines.append(cleaned_line)
-
-    return relevant_lines
-
-# Extract total energy from the "Energy" column in the table
+# Function to extract all energy values from the "Energy" column
 def find_total_energy(page_lines):
+    table = extract_table(page_lines)
+    if not table:
+        st.write("No table found in the page.")
+        return []
 
-    return 100  # Return the list of energy values
+    index = search_energy_col(table)
+    
+    if index == -1:
+        st.write("Energy column not found.")
+        return []
+
+    energy_values = []
+    # Start from row 1 (the data rows) and extract energy values
+    for row in table[1:]:
+        # Assuming the energy values are in a numerical format in the "Energy" column
+        try:
+            energy_value = float(row.split()[index])  # Extract the value from the index
+            energy_values.append(energy_value)
+        except ValueError:
+            continue  # In case there is an invalid value, just skip the row
+
+    running_total = 0
+    
+    for items in energy_values:
+        st.write(f"Energy Value: {items}")
+        if running_total != items:
+            running_total += items
+        else: 
+            return running_total
 
 # Function to generate page data and CSV
 def find_page_data(page, page_num):
     page_data = []
     st.write(page)
-    
+
     month_in = find_month(page)
     st.write(month_in)
     year_in = find_year(page)
