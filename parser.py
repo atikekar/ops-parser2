@@ -77,7 +77,15 @@ def find_name(lines):
 
 # Extract total energy from the "Energy" column in the table
 def find_total_energy(page_lines):
-    return 100  # Return the list of energy values
+    extracted_table = []
+    for row in page_lines: 
+        #if row starts with 01-31, 1-31 or a date format
+        if re.match(r'^\d{1,2}[-/]\d{1,2}[-/]\d{4}', row):
+            extracted_table.append(row)
+    
+    st.write("Extracted Table:", extracted_table)
+    return 100
+            
 
 # Function to generate page data and CSV
 def find_page_data(page, page_num):
