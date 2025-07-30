@@ -123,7 +123,7 @@ def find_total_energy(page_lines):
             continue  # In case there is an invalid value, just skip the row
 
     running_total = 0
-    
+
     for items in energy_values:
         st.write(f"Energy Value: {items}")
         if running_total != items:
@@ -134,16 +134,15 @@ def find_total_energy(page_lines):
 # Function to generate page data and CSV
 def find_page_data(page, page_num):
     page_data = []
-    st.write(page)
-
+    
     month_in = find_month(page)
-    st.write(month_in)
+    st.write("MONTH:", month_in)
     year_in = find_year(page)
-    st.write(year_in)
+    st.write("YEAR:", year_in)
     name_in = find_name(page)  # Pass the file_bytes to find_name
-    st.write(name_in)
+    st.write("NAME:", name_in)
     total_in = find_total_energy(page)
-    st.write(total_in)
+    st.write("TOTAL ENERGY:", total_in)
     page_data.append(Page(page_num, month_in, year_in, name_in, total_in))
 
     return page_data
@@ -193,13 +192,10 @@ def execute():
 
         for i, page in enumerate(pdf.pages):
             text = page.extract_text(layout=True)
-            #table = page.extract_table()
-            st.write(text)
             lines = text.splitlines() if text else []
             page_num = i + 1
 
             progress_bar.progress(min(10 + ((i + 1) * 10), 90), f"Processing page {i + 1} of {len(pdf.pages)}")
-            st.write("Extracting data from page", page_num)
             page_data.append(find_page_data(lines, page_num))
 
     input_file_name = input_file.name if input_file.name else "extracted_data.pdf"
