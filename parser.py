@@ -74,7 +74,11 @@ def find_name(lines):
         return pdf_title
     else:
         return matches[0]
-    
+
+# Replace spaces with 'X' to maintain layout in extracted text
+def replace_spaces_with_X(text):
+    return text.replace(" ", "X")
+
 def extract_table(lines):
     table_start = 0
     extracted_table = []
@@ -158,7 +162,6 @@ def save_to_csv(page_data, output_csv_path):
     df.to_csv(output_csv_path, index=False)
     df.to_csv("extracted_data.csv", index=False)
 
-
 # Main function to execute the Streamlit app
 def execute():
 
@@ -185,6 +188,8 @@ def execute():
 
         for i, page in enumerate(pdf.pages):
             text = page.extract_text(layout=True)
+            # Replace spaces with 'X' to maintain layout visibility
+            text = replace_spaces_with_X(text)
             st.write(text)
 
             lines = text.splitlines() if text else []
