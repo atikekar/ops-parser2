@@ -1,12 +1,7 @@
 import streamlit as st
+import pdfplumber
 import pandas as pd
 import re
-from io import BytesIO
-import pdfplumber
-import base64
-import numpy as np
-import os
-from calendar import month_name
 
 # Define the Page class
 class Page:
@@ -64,31 +59,18 @@ def find_name(lines):
         return pdf_title
     else:
         return matches[0]
-    
-def extract_table(lines):
-    table_start = 0
-    extracted_table = []
-    for i, line in enumerate(lines):
-        if re.match(r'^\d{1,2}[-/]\d{1,2}[-/]\d{4}', line):
-            if table_start == 0:
-                table_start = i
-            extracted_table.append(lines[i])
-
-    st.write("Extracted Table:", extracted_table)
-    return extracted_table
 
 # Function to search for the "Energy" column index
 def search_energy_col(table):
-    for row in table: 
-        if re.search(r'Energy|Usage|MMBtu', row, re.IGNORECASE):
-            energy_index = row.index(re.search(r'Energy', row, re.IGNORECASE).group(0))
-            st.write(f"Energy column found at index: {energy_index}")
-            return energy_index
+    for row in table:
+        for idx, cell in enumerate(row):
+            if re.search(r'Energy|Usage|MMBtu', cell, re.IGNORECASE):
+                st.write(f"Energy column found at index: {idx}")
+                return idx
     return -1  # Return -1 if no Energy column is found
 
 # Function to extract all energy values from the "Energy" column
-def find_total_energy(text):
-    table = extract_table(text)
+def find_total_energy(table):
     index = search_energy_col(table)
     
     if index == -1:
@@ -96,35 +78,35 @@ def find_total_energy(text):
         return []
 
     energy_values = []
-    # Start from row 1 (the data rows) and extract energy values
-    for row in table[1:]:
-        # Assuming the energy values are in a numerical format in the "Energy" column
+    # Extract energy values from the rows
+    for row in table[1:]:  # Skip the header row
         try:
-            energy_value = float(row.split()[index])  # Extract the value from the index
+            energy_value = float(row[index])  # Extract the value from the Energy column
             energy_values.append(energy_value)
         except ValueError:
             continue  # In case there is an invalid value, just skip the row
 
     running_total = 0
+    for item in energy_values:
+        running_total += item  # Calculate the total energy
 
-    for items in energy_values:
-        if running_total != items:
-            running_total += items
-        else: 
-            return running_total
+    return running_total
 
 # Function to generate page data and CSV
-def find_page_data(page, page_num):
+def find_page_data(table, page_num):
     page_data = []
 
-    month_in = find_month(page)
+    # For month, year, and name we still need to rely on the text
+    month_in = find_month(table)
     st.write("MONTH:", month_in)
-    year_in = find_year(page)
+    year_in = find_year(table)
     st.write("YEAR:", year_in)
-    name_in = find_name(page)  # Pass the file_bytes to find_name
+    name_in = find_name(table)
     st.write("NAME:", name_in)
-    total_in = find_total_energy(page)
+    
+    total_in = find_total_energy(table)
     st.write("TOTAL ENERGY:", total_in)
+    
     page_data.append(Page(page_num, month_in, year_in, name_in, total_in))
 
     return page_data
@@ -146,21 +128,19 @@ def save_to_csv(page_data, output_csv_path):
 
 # Main function to execute the Streamlit app
 def execute():
-
     st.title("Sustainable Gas Ops Document Parser")
     st.write("This application processes PDF files to extract relevant data and convert it into a CSV file.")
 
     st.set_page_config(page_title="Sustainable Gas Ops Document Parser", layout="wide")
     input_file = st.file_uploader("Upload a PDF file", type=["pdf"], key="pdf_uploader")
-    input_file_name = str(input_file.name) if input_file else "extracted_data.pdf"
-    #input_path = './sample1.pdf'
-    #input_file = open(input_path, "rb")
-
-    if input_file is None: return "No file uploaded. Please upload a PDF file to proceed."
-    progress_bar = st.progress(0, "Converting PDF to images...")
+    
+    if input_file is None:
+        return "No file uploaded. Please upload a PDF file to proceed."
+    
+    progress_bar = st.progress(0)
     page_data = []
 
-#----------------------------------------------------------------
+    #----------------------------------------------------------------
 
     with pdfplumber.open(input_file) as pdf:
         if not pdf.pages:
@@ -172,22 +152,19 @@ def execute():
 
         # Loop through all the pages in the PDF
         for i in range(len(pdf.pages)):
-            lines = pdf.pages[i].extract_table()
+            table = pdf.pages[i].extract_table()
 
-            #if text:
-                #st.write(f"Page {i + 1} Text:")
-                #st.text(text)  # Display the extracted text
-            #else:
-                #st.write(f"Page {i + 1} contains no extractable text.")
+            if table:
+                st.write(f"Page {i + 1} Table:")
+                st.write(table)  # Display the extracted table
+            else:
+                st.write(f"Page {i + 1} contains no extractable table.")
 
-            # Process the extracted lines
-            #lines = text.splitlines() if text else []
             page_num = i + 1
             progress_bar.progress(min(10 + ((i + 1) * 10), 90), f"Processing page {i + 1} of {len(pdf.pages)}")
-            # Use your page_data processing function here (if necessary)
-            page_data.append(find_page_data(lines, page_num))  # Assuming find_page_data is defined
+            page_data.append(find_page_data(table, page_num))
 
-#----------------------------------------------------------------
+    #----------------------------------------------------------------
 
     input_file_name = input_file.name if input_file.name else "extracted_data.pdf"
     csv_name = input_file_name.replace('.pdf', '_data.csv')
@@ -203,4 +180,5 @@ def execute():
         mime='text/csv'
     )
 
+# Execute the app
 execute()
