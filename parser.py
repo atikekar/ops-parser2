@@ -102,9 +102,6 @@ def search_energy_col(table):
 # Function to extract all energy values from the "Energy" column
 def find_total_energy(page_lines):
     table = extract_table(page_lines)
-    if not table:
-        st.write("No table found in the page.")
-        return []
 
     index = search_energy_col(table)
     
@@ -132,16 +129,16 @@ def find_total_energy(page_lines):
             return running_total
 
 # Function to generate page data and CSV
-def find_page_data(page, page_num):
+def find_page_data(page, text, page_num):
     page_data = []
-    
+
     month_in = find_month(page)
     st.write("MONTH:", month_in)
     year_in = find_year(page)
     st.write("YEAR:", year_in)
     name_in = find_name(page)  # Pass the file_bytes to find_name
     st.write("NAME:", name_in)
-    total_in = find_total_energy(page)
+    total_in = find_total_energy(text)
     st.write("TOTAL ENERGY:", total_in)
     page_data.append(Page(page_num, month_in, year_in, name_in, total_in))
 
@@ -196,7 +193,7 @@ def execute():
             page_num = i + 1
 
             progress_bar.progress(min(10 + ((i + 1) * 10), 90), f"Processing page {i + 1} of {len(pdf.pages)}")
-            page_data.append(find_page_data(lines, page_num))
+            page_data.append(find_page_data(lines, text, page_num))
 
     input_file_name = input_file.name if input_file.name else "extracted_data.pdf"
     csv_name = input_file_name.replace('.pdf', '_data.csv')
