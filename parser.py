@@ -75,32 +75,14 @@ def find_name(lines):
     else:
         return matches[0]
 
-#returns the top and bottom lines of the table
-def extract(lines):
-    relevant_lines = []
-
-    for line in lines:
-        stripped = line.strip()
-
-        # Only consider relevant lines
-        if re.match(r'^\d', stripped) or re.search(r'\b(?:Energy|Total|Usage|Consumption|Date|Day)\b', stripped, re.IGNORECASE):
-            # Replace large gaps (2+ spaces or tabs) with ' X '
-            cleaned_line = re.sub(r'(\s{2,}|\t+)', ' X ', stripped)
-            relevant_lines.append(cleaned_line)
-
-    return relevant_lines
-
 # Extract total energy from the "Energy" column in the table
 def find_total_energy(page_lines):
-
     return 100  # Return the list of energy values
 
 # Function to generate page data and CSV
-def find_page_data(page, data, page_num):
 def find_page_data(page, page_num):
     page_data = []
     st.write(page)
-    st.write(data)
     
     month_in = find_month(page)
     st.write(month_in)
@@ -108,7 +90,6 @@ def find_page_data(page, page_num):
     st.write(year_in)
     name_in = find_name(page)  # Pass the file_bytes to find_name
     st.write(name_in)
-    total_in = find_total_energy(data)
     total_in = find_total_energy(page)
     st.write(total_in)
     page_data.append(Page(page_num, month_in, year_in, name_in, total_in))
