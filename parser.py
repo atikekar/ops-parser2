@@ -184,7 +184,7 @@ def execute():
         st.write(f"Total pages in PDF: {len(pdf.pages)}")
 
         for i, page in enumerate(pdf.pages):
-            text = page.extract_text(layout=True)
+            text = page.extract_text_lines(layout=True)
             st.write(text)
 
             lines = text.splitlines() if text else []
