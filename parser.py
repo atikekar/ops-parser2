@@ -89,17 +89,16 @@ def find_total_energy(page_lines):
     # Smart Extraction
     if option == smart:
         contains_energy = []
-        first_match = 0
-
+        header_row = 0
         table_values = []
-        for line in page_lines:
+        for i, line in enumerate(page_lines):
             num_match = re.match(r'^\d', line.strip())  # Check if line starts with a digit
             total_match = re.match(r'Total', line.strip())  # Check for the word "Total"
             if num_match or total_match:
+                if header_row == 0: header_row = i
                 table_values.append(line)
-            else: 
-                first_match += 1
-        table_values.append(page_lines[first_match - 1])
+
+        table_values.append(page_lines[i - 1])
         st.write(table_values)
 
         return 100
