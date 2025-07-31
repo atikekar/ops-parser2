@@ -115,8 +115,7 @@ def save_to_csv(page_data, output_csv_path):
 
 # Main function to execute the Streamlit app
 def execute():
-    st.write("What happened")
-    st.title("Sustainable Gas Ops Document Parser")
+
     st.write("This application processes PDF files to extract relevant data and convert it into a CSV file.")
 
     st.set_page_config(page_title="Sustainable Gas Ops Document Parser", layout="wide")
