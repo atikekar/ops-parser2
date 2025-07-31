@@ -86,7 +86,7 @@ def find_total_energy(page_lines):
             table_values.append(int(match.group(1)))
     st.write(table_values)
     # Return the sum of energy values
-    return sum(energy_values)
+    return sum(table_values)
             
 
 # Function to generate page data and CSV
