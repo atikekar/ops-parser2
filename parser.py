@@ -76,19 +76,40 @@ def find_name(lines):
         return matches[0]
 
 
+# Define the options for extraction
+smart = "Smart Extract"
+manual = "Manual Extract"
+
 # Extract total energy from the "Energy" column in the table
 def find_total_energy(page_lines):
-    table_values = []
-    first = 0
-    for i, line in enumerate(page_lines):
-        num_match = re.match(r'^\d', line.strip())
-        total_match = re.match(r'Total', line.strip())
-        if num_match or total_match:
-            if first == 0: first = i
-            table_values.append(line)
-    table_values.append(page_lines[i-1])
-    st.write(table_values)
-    return 100
+    # Display options for extraction
+    st.write("Choose Extraction Option:")
+    option = st.selectbox("Select extraction mode", [smart, manual])
+
+    # Smart Extraction
+    if option == smart:
+        contains_energy = []
+
+        for line in page_lines:
+            energy_line = re.match(r'Energy|Usage|MMBtu', line.strip(), re.IGNORECASE)
+            if energy_line:
+                contains_energy.append(line)
+        st.write(contains_energy)
+        
+        table_values = []
+        for line in page_lines:
+            num_match = re.match(r'^\d', line.strip())  # Check if line starts with a digit
+            total_match = re.match(r'Total', line.strip())  # Check for the word "Total"
+            if num_match or total_match:
+                table_values.append(line)
+        st.write(table_values)
+
+        return 100
+    
+    # Manual Extraction (for future functionality)
+    if option == manual:
+        st.write("Manual extraction mode selected.")
+        return 100  # You can implement specific manual extraction logic here
     # Return the sum of energy values
 
             
