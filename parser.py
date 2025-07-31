@@ -146,12 +146,7 @@ def execute():
         st.write(f"Total pages in PDF: {len(pdf.pages)}")
 
         for i, page in enumerate(pdf.pages):
-            text = page.extract_text()
-            table = page.extract_table()
-            st.write("Table:", table)
             text = page.extract_text(layout=True)
-
-            st.write("Text:", text)
             lines = text.splitlines() if text else []
             page_num = i + 1
 
