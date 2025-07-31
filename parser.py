@@ -82,25 +82,30 @@ manual = "Manual Extract"
 
 # Extract total energy from the "Energy" column in the table
 def find_total_energy(page_lines):
-    # Display options for extraction
-    st.write("Choose Extraction Option:")
+
     option = st.selectbox("Select extraction mode", [smart, manual])
 
     # Smart Extraction
     if option == smart:
         contains_energy = []
-        header_row = 0
+        header_row = -1  # Initialize to -1 to handle the case where no match is found
         table_values = []
+        
         for i, line in enumerate(page_lines):
             num_match = re.match(r'^\d', line.strip())  # Check if line starts with a digit
             total_match = re.match(r'Total', line.strip())  # Check for the word "Total"
+            
             if num_match or total_match:
-                if header_row == 0: header_row = i
+                if header_row == -1:  # Only capture the first match
+                    header_row = i
                 table_values.append(line)
 
-        table_values.append(page_lines[i - 1])
+        # If a match was found, append the line before the first match
+        if header_row > 0:  # Ensure there was at least one match
+            table_values.append(page_lines[header_row - 1])
+        
         st.write(table_values)
-
+        
         return 100
     
     # Manual Extraction (for future functionality)
