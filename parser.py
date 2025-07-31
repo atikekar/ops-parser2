@@ -85,7 +85,7 @@ def find_total_energy(page_lines):
         if match:
             if first == 0: first = i
             table_values.append(line)
-    table_values.append(page_lines[i])
+    table_values.append(page_lines[i-1])
     st.write(table_values)
 
     # Return the sum of energy values
