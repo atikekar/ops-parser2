@@ -122,7 +122,6 @@ def find_total_energy(page_lines):
 # Function to generate page data and CSV
 def find_page_data(page, page_num):
     page_data = []
-    st.write("Page:", page)
     
     month_in = find_month(page)
     year_in = find_year(page)
@@ -162,7 +161,7 @@ def execute():
     #input_file = open(input_path, "rb")
 
     if input_file is None: return "No file uploaded. Please upload a PDF file to proceed."
-
+    
     progress_bar = st.progress(0, "Converting PDF to images...")
 
     page_data = []
@@ -173,8 +172,6 @@ def execute():
             return
 
         progress_bar.progress(10, "PDF opened successfully.")
-
-        st.write(f"Total pages in PDF: {len(pdf.pages)}")
 
         for i, page in enumerate(pdf.pages):
             text = page.extract_text(layout=True)
