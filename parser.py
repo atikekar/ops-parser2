@@ -105,8 +105,28 @@ def find_total_energy(page_lines):
             table_values.append(page_lines[header_row - 1])
         
         st.write(table_values)
+
+        pattern = r'(Energy|Usage|MMBtu)'
+    
+        # Loop through table_values to find the first occurrence of any keyword
+        for i, line in enumerate(table_values):
+            energy_match = re.search(pattern, line.strip(), re.IGNORECASE)
+            
+            if energy_match:
+                # If a match is found, check if there is a previous line
+                if i > 0:  # Ensure there's a previous line
+                    previous_line = table_values[i - 1]
+                    
+                    # Now extract the first number in the previous line (assuming it's the energy value)
+                    number_match = re.search(r'\d+', previous_line.strip())
+                    
+                    if number_match:
+                        # Return the number found in the previous line
+                        return int(number_match.group(0))
         
-        return 100
+        # If no match or number found, return None (or some default value)
+        st.write("No total energy value found with Smart Extraction, loading Manual Extraction")
+        option == manual
     
     # Manual Extraction (for future functionality)
     if option == manual:
