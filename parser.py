@@ -75,9 +75,11 @@ def find_name(lines):
     else:
         return matches[0]
 
+
 # Extract total energy from the "Energy" column in the table
 def find_total_energy(page_lines):
-    st.write(page_lines)
+    return 0
+    #get the index and find that index at the 
             
 
 # Function to generate page data and CSV
