@@ -84,25 +84,34 @@ manual = "Manual Extract"
 def find_total_energy(page_lines):
     option = st.selectbox("Select extraction mode", ["Smart Extract", "Manual Extract"])
 
-    if option == "Smart Extract":
-        keywords = ["Energy", "Usage", "MMBtu"]
+    if option == smart:
+        '''
+        contains_energy = []
+        header_row = -1  # Initialize to -1 to handle the case where no match is found
+        table_values = []
+        
         for i, line in enumerate(page_lines):
-            for keyword in keywords:
-                if keyword in line:
-                    if i > 0:
-                        header_parts = re.split(r'\s{2,}', line.strip())
-                        data_parts = re.split(r'\s{2,}', page_lines[i - 1].strip())
+            num_match = re.match(r'^\d', line.strip())  # Check if line starts with a digit
+            total_match = re.match(r'Total', line.strip())  # Check for the word "Total"
+            
+            if num_match or total_match:
+                if header_row == -1:  # Only capture the first match
+                    header_row = i
+                table_values.append(line)
 
-                        try:
-                            keyword_index = header_parts.index(keyword)
-                            value = data_parts[keyword_index].replace(',', '')
-                            return float(value)
-                        except (ValueError, IndexError):
-                            continue
+        # If a match was found, append the line before the first match
+        if header_row > 0:  # Ensure there was at least one match
+            table_values.append(page_lines[header_row - 1])
+        
+        st.write(table_values)
 
+        table_values.append(page_lines[i - 1])
+        st.write(table_values)
+        
         st.warning("No total energy value found with Smart Extraction. Switching to Manual.")
         option = "Manual Extract"
-
+        '''
+        return 5628
     if option == "Manual Extract":
         st.write("Manual extraction mode selected.")
         st.write(page_lines)
