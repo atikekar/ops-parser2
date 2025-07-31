@@ -85,7 +85,7 @@ def find_total_energy(page_lines):
 # Function to generate page data and CSV
 def find_page_data(page, page_num):
     page_data = []
-    #st.write("Page:", page)
+    st.write("Page:", page)
     
     month_in = find_month(page)
     st.write(month_in)
