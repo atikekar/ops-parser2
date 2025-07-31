@@ -91,8 +91,11 @@ def find_total_energy(page_lines):
         contains_energy = []
 
         for line in page_lines:
-            energy_line = re.match(r'Energy|Usage|MMBtu', line.strip(), re.IGNORECASE)
-            if energy_line:
+            energy = re.match(r'Energy', line.strip(), re.IGNORECASE)
+            usage = re.match(r'Usage', line.strip(), re.IGNORECASE)
+            mmbtu = re.match(r'MMBtu', line.strip(), re.IGNORECASE)
+
+            if energy or usage or mmbtu:
                 contains_energy.append(line)
         st.write(contains_energy)
         
