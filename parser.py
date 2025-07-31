@@ -80,56 +80,30 @@ def find_name(lines):
 smart = "Smart Extract"
 manual = "Manual Extract"
 
-# Extract total energy from the "Energy" column in the table
+
 def find_total_energy(page_lines):
+    option = st.selectbox("Select extraction mode", ["Smart Extract", "Manual Extract"])
 
-    option = st.selectbox("Select extraction mode", [smart, manual])
-
-    # Smart Extraction
-    if option == smart:
-        contains_energy = []
-        header_row = -1  # Initialize to -1 to handle the case where no match is found
-        table_values = []
-        
+    if option == "Smart Extract":
+        keywords = ["Energy", "Usage", "MMBtu"]
         for i, line in enumerate(page_lines):
-            num_match = re.match(r'^\d', line.strip())  # Check if line starts with a digit
-            total_match = re.match(r'Total', line.strip())  # Check for the word "Total"
-            
-            if num_match or total_match:
-                if header_row == -1:  # Only capture the first match
-                    header_row = i
-                table_values.append(line)
+            for keyword in keywords:
+                if keyword in line:
+                    if i > 0:
+                        header_parts = re.split(r'\s{2,}', line.strip())
+                        data_parts = re.split(r'\s{2,}', page_lines[i - 1].strip())
 
-        # If a match was found, append the line before the first match
-        if header_row > 0:  # Ensure there was at least one match
-            table_values.append(page_lines[header_row - 1])
-        
-        st.write(table_values)
+                        try:
+                            keyword_index = header_parts.index(keyword)
+                            value = data_parts[keyword_index].replace(',', '')
+                            return float(value)
+                        except (ValueError, IndexError):
+                            continue
 
-        pattern = r'(Energy|Usage|MMBtu)'
-    
-        # Loop through table_values to find the first occurrence of any keyword
-        for i, line in enumerate(table_values):
-            energy_match = re.search(pattern, line.strip(), re.IGNORECASE)
-            
-            if energy_match:
-                # If a match is found, check if there is a previous line
-                if i > 0:  # Ensure there's a previous line
-                    previous_line = table_values[i - 1]
-                    
-                    # Now extract the first number in the previous line (assuming it's the energy value)
-                    number_match = re.search(r'\d+', previous_line.strip())
-                    
-                    if number_match:
-                        # Return the number found in the previous line
-                        return int(number_match.group(0))
-        
-        # If no match or number found, return None (or some default value)
-        st.write("No total energy value found with Smart Extraction, loading Manual Extraction")
-        option == manual
-    
-    # Manual Extraction (for future functionality)
-    if option == manual:
+        st.warning("No total energy value found with Smart Extraction. Switching to Manual.")
+        option = "Manual Extract"
+
+    if option == "Manual Extract":
         st.write("Manual extraction mode selected.")
         st.write(page_lines)
         energy_value = st.number_input("Enter Total Energy: ", min_value=0, value=0)
