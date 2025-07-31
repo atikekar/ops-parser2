@@ -150,6 +150,7 @@ def execute():
             st.write("Extracting data from page", page_num)
             page_data.append(find_page_data(lines, page_num))
 
+    st.write("Pages found:", len(page_data))
     input_file_name = input_file.name if input_file.name else "extracted_data.pdf"
     csv_name = input_file_name.replace('.pdf', '_data.csv')
 
