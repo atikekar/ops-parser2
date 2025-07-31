@@ -125,13 +125,9 @@ def find_page_data(page, page_num):
     st.write("Page:", page)
     
     month_in = find_month(page)
-    st.write(month_in)
     year_in = find_year(page)
-    st.write(year_in)
-    name_in = find_name(page)  # Pass the file_bytes to find_name
-    st.write(name_in)
+    name_in = find_name(page)
     total_in = find_total_energy(page)
-    st.write(total_in)
     page_data.append(Page(page_num, month_in, year_in, name_in, total_in))
 
     return page_data
