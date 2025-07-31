@@ -102,14 +102,16 @@ def find_page_data(page, page_num):
 # Function to save data to CSV
 def save_to_csv(page_data, output_csv_path):
     csv_data = []
-    for i, page in enumerate(page_data):
+    page_num = 1
+    for page in page_data:
         csv_data.append({
-            "Page": i + 1,
+            "Page": page_num,
             "Month": page.month,
             "Year": page.year,
             "Name": page.name,
             "Total Energy": page.total
         })
+        page_num += 1
     df = pd.DataFrame(csv_data)
     df.to_csv(output_csv_path, index=False)
     df.to_csv("extracted_data.csv", index=False)
@@ -150,7 +152,6 @@ def execute():
             st.write("Extracting data from page", page_num)
             page_data.append(find_page_data(lines, page_num))
 
-    st.write("Pages found:", len(page_data))
     input_file_name = input_file.name if input_file.name else "extracted_data.pdf"
     csv_name = input_file_name.replace('.pdf', '_data.csv')
 
