@@ -111,13 +111,14 @@ def find_total_energy(page_lines):
         st.warning("No total energy value found with Smart Extraction. Switching to Manual.")
         option = "Manual Extract"
         '''
-        return 5628
+        energy_value = 5628
+        
     if option == "Manual Extract":
         st.write("Manual extraction mode selected.")
         st.write(page_lines)
         energy_value = st.number_input("Enter Total Energy: ", min_value=0, value=0)
         st.write(f"Manually entered energy value: {energy_value}")
-        return energy_value
+    return energy_value
 
             
 
