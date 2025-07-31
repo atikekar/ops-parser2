@@ -109,8 +109,10 @@ def find_total_energy(page_lines):
     # Manual Extraction (for future functionality)
     if option == manual:
         st.write("Manual extraction mode selected.")
-        return 100  # You can implement specific manual extraction logic here
-    # Return the sum of energy values
+        st.write(page_lines)
+        energy_value = st.number_input("Enter Total Energy: ", min_value=0, value=0)
+        st.write(f"Manually entered energy value: {energy_value}")
+        return energy_value
 
             
 
