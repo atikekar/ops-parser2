@@ -143,9 +143,13 @@ def find_page_data(page, page_num):
     page_data = []
     
     month_in = find_month(page)
+    st.write(month_in)
     year_in = find_year(page)
+    st.write(year_in)
     name_in = find_name(page)
+    st.write(name_in)
     total_in = find_total_energy(page)
+    st.write(total_in)
     page_data.append(Page(page_num, month_in, year_in, name_in, total_in))
 
     return page_data
