@@ -79,14 +79,17 @@ def find_name(lines):
 # Extract total energy from the "Energy" column in the table
 def find_total_energy(page_lines):
     table_values = []
-    
-    for line in page_lines:
+    first = 0
+    for i, line in enumerate(page_lines):
         match = re.match(r'^\d', line.strip())
         if match:
+            if first == 0: first = i
             table_values.append(line)
+    table_values.append(page_lines[i])
     st.write(table_values)
+
     # Return the sum of energy values
-    return sum(table_values)
+
             
 
 # Function to generate page data and CSV
