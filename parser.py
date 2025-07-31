@@ -80,7 +80,7 @@ def find_total_energy(page_lines):
     extracted_table = []
     for row in page_lines: 
         #if row starts with 01-31, 1-31 or a date format
-        if re.match(r'^\d{1,2}[-/]\d{1,2}[-/]\d{4}', row):
+        if re.match(r'^\s*\d', row):
             extracted_table.append(row)
     
     st.write("Extracted Table:", extracted_table)
