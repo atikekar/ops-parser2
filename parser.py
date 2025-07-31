@@ -150,7 +150,7 @@ def execute():
 
             progress_bar.progress(min(10 + ((i + 1) * 10), 90), f"Processing page {i + 1} of {len(pdf.pages)}")
             st.write("Extracting data from page", page_num)
-            page_data.append(find_page_data(lines, page_num))
+            page_data.extend(find_page_data(lines, page_num))
 
     input_file_name = input_file.name if input_file.name else "extracted_data.pdf"
     csv_name = input_file_name.replace('.pdf', '_data.csv')
