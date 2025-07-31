@@ -92,13 +92,14 @@ def find_total_energy(page_lines):
         first_match = 0
 
         table_values = []
-        for i, line in enumerate(page_lines):
+        for line in page_lines:
             num_match = re.match(r'^\d', line.strip())  # Check if line starts with a digit
             total_match = re.match(r'Total', line.strip())  # Check for the word "Total"
             if num_match or total_match:
-                if first_match == 0: first_match = i
                 table_values.append(line)
-        table_values.append(page_lines[i])
+            else: 
+                first_match += 1
+        table_values.append(page_lines[first_match - 1])
         st.write(table_values)
 
         return 100
