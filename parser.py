@@ -81,6 +81,7 @@ def find_total_energy(page_lines):
     table_values = []
     
     for line in page_lines:
+        st.write("Line: ", line)
         match = re.match(r'^\d+.*\s+(\d+)$', line.strip())
         if match:
             table_values.append(int(match.group(1)))
