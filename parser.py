@@ -80,8 +80,8 @@ def find_total_energy(page_lines):
     extracted_table = []
     for row in page_lines:
         extracted_table.append(row)
-    
-    st.write("Extracted Table:", extracted_table)
+    for row in extracted_table:
+        st.write(row)
     return 100
             
 
