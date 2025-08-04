@@ -137,7 +137,8 @@ def find_total_energy(page_lines, extract_mode):
 
         st.write(head[-1])
         st.write(table[-1])
-        st.write("Energy values:", number)
+        if number: st.write(number)
+        else: st.write("No number found")
         
         return number 
 
