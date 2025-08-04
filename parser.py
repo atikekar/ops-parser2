@@ -117,10 +117,12 @@ def find_total_energy(page_lines, pdf_path):
             num_match = re.match(r'^\d', line)
             total_match = re.search(r'Total', line, re.IGNORECASE)
             header_match = re.search(r'Energy|Usage|MMBtu|Quantity|Current', line, re.IGNORECASE)
+            st.write(line)
             if num_match or total_match: 
                 table.append(line)
             if header_match: 
                 head.append(line)
+        
         st.write(table)
         condense = []
         condense.append(head[-1])
