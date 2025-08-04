@@ -139,7 +139,7 @@ def find_total_energy(page_lines, pdf_path):
             energy_end = match.end()
 
             if energy_end:
-                st.write(f"Energy coordinates: {energy_ends}")
+                st.write(f"Energy coordinates: {energy_end}")
                 # Find the closest number aligned with the y-coordinate of energy_coordinates
                 closest_number = find_closest_number(page_lines, energy_end)
                 st.write(f"Closest number: {closest_number}")
