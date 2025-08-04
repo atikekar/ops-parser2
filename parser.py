@@ -126,21 +126,34 @@ def find_total_energy(page_lines, extract_mode):
         # Find the starting index of each word in line1 using regex
         positions = [match.start() for match in re.finditer(r'\S+', head[-1])]
 
-        # Search for the first keyword from the list in line1
         keyword_index = None
-        for keyword in keywords:
-            if keyword in head[-1]:
-                keyword_index = head[-1].find(keyword)
-                break
+        
+    for keyword in keywords:
+        if keyword in head[-1]:
+            keyword_index = head[-1].find(keyword)
+            break
 
-        if keyword_index is not None:
-            # Extract the value under the matched keyword in line2
-            line2_value = table[-1][keyword_index:].split()[0] 
-            st.write(line2_value)
-            return line2_value
-        else:
-            st.warning("Could not find the correct keyword in the header.")
-            st.session_state.option = "Manual Extract"  # Switch to manual extraction mode if no match
+    if keyword_index is not None:
+        # Find the number just before the "Energy" value in line2
+        line2 = table[-1]
+        
+        # Find all non-whitespace sequences in line2
+        line2_split = re.findall(r'\S+', line2)
+
+        # Find the position of the number just before "Energy" (in this case, it's "49")
+        prev_value = line2_split[keyword_index - 1]
+
+        # Calculate the end index of the previous value
+        prev_value_end_index = line2.find(prev_value) + len(prev_value)
+
+        # Set the end index of the "Energy" column by adjusting with `next_closest`
+        next_closest = prev_value_end_index
+        
+        # Extract the value under the "Energy" keyword in line2, using `next_closest`
+        line2_value = line2[next_closest:].split()[0]  # Extract the first word after the "Energy" column
+        print(f"The value under 'Energy' is: {line2_value}")
+    else:
+        print("Could not find the correct keyword in the header.")
 
     if extract_mode == "Manual Extract":
         st.write("Manual extraction mode selected.")
