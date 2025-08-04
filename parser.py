@@ -130,11 +130,12 @@ def find_total_energy(page_lines, pdf_path):
             table_values.append(page_lines[header_row - 1])
 
         table_values.append(page_lines[i - 1])
+        st.write(table_values)
         condensed_table = remove_empty_lines(table_values)
         
         # Remove all but the last two lines of table_values
         condensed_table = condensed_table[-2:]
-        st.write(condensed_table)
+
         header = condensed_table[1]
         total = condensed_table[0]
 
