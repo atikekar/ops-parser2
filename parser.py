@@ -144,6 +144,7 @@ def find_total_energy(page_lines, pdf_path):
 
             if energy_end:
                 st.write(f"Energy coordinates: {energy_end}")
+                st.write(condensed_table[0])
                 # Find the closest number aligned with the y-coordinate of energy_coordinates
                 closest_number = find_closest_number(condensed_table[0], energy_end)
                 st.write(f"Closest number: {closest_number}")
@@ -153,6 +154,10 @@ def find_total_energy(page_lines, pdf_path):
         else:
             st.warning("No total energy value found with Smart Extraction. Switching to Manual.")
             st.session_state.option = "Manual Extract"  # Set to manual mode after warning
+            st.write(page_lines)
+            energy_value = st.number_input("Enter Total Energy: ", min_value=0, value=0)
+            st.write(f"Manually entered energy value: {energy_value}")
+            return energy_value
 
     if st.session_state.option == "Manual Extract":
         st.write("Manual extraction mode selected.")
