@@ -137,10 +137,10 @@ def find_total_energy(page_lines, extract_mode):
             # Extract the value under the matched keyword in line2
             line2_value = table[-1][keyword_index:].split()[0] 
             st.write(line2_value)
-
-
-        st.warning("Could not find the correct keyword in the header.")
-        st.session_state.option = "Manual Extract"  # Switch to manual extraction mode if no match
+            return line2_value
+        else:
+            st.warning("Could not find the correct keyword in the header.")
+            st.session_state.option = "Manual Extract"  # Switch to manual extraction mode if no match
 
     if extract_mode == "Manual Extract":
         st.write("Manual extraction mode selected.")
