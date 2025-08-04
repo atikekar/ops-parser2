@@ -100,6 +100,9 @@ def find_closest_number(page_lines, energy_coordinates):
     
     return closest_num
 
+def remove_empty_lines(input_list):
+    return [line for line in input_list if line.strip()]
+
 def find_total_energy(page_lines, pdf_path):
     # Check if `option` already exists in session state, if not initialize it
     if "option" not in st.session_state:
@@ -126,12 +129,14 @@ def find_total_energy(page_lines, pdf_path):
             table_values.append(page_lines[header_row - 1])
 
         table_values.append(page_lines[i - 1])
+        condensed_table = remove_empty_lines(table_values)
         
         # Remove all but the last two lines of table_values
-        st.write(table_values)
+        condensed_table = condensed_table[-2:]
+        st.write(condensed_table)
 
         # Match the keyword (Energy, Usage, or MMBtu)
-        match = re.match(r'Energy|Usage|(MMBtu)', table_values[1])
+        match = re.match(r'Energy|Usage|(MMBtu)', condensed_table[1])
 
         if match:
             # Now we need to use pdfplumber to find the coordinates of the matched word
@@ -140,7 +145,7 @@ def find_total_energy(page_lines, pdf_path):
             if energy_end:
                 st.write(f"Energy coordinates: {energy_end}")
                 # Find the closest number aligned with the y-coordinate of energy_coordinates
-                closest_number = find_closest_number(page_lines, energy_end)
+                closest_number = find_closest_number(condensed_table[0], energy_end)
                 st.write(f"Closest number: {closest_number}")
             else:
                 st.warning("No coordinates found for the keyword 'Energy'.")
