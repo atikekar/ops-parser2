@@ -121,32 +121,25 @@ def find_total_energy(page_lines, extract_mode):
 
 
         # Extract the last header and table row
-        if head and table:
-            header = head[-1]  # Get the last header row (as a string)
-            values = table[-1]  # Get the last table row (as a string)
+        keywords = ["Energy", "Usage", "MMBtu", "Rounded"]
 
-            keys = ["Energy", "Usage", "MMBtu", "Rounded"]
-            for key in keys:
-                # Find the position of the key in the header (index of the column)
-                index = header.find(key)
-                
-                if index != -1:  # If the key is found in the header
-                    # Use string indexing to find the corresponding value in the table row
-                    value_start = index
-                    # Move backward until we hit a space (start of the value)
-                    while value_start > 0 and values[value_start - 1] != ' ':
-                        value_start -= 1
-                    value_end = index
-                    # Move forward until we hit a space (end of the value)
-                    while value_end < len(values) and values[value_end] != ' ':
-                        value_end += 1
-                    
-                    # Extract the number using the identified indexes
-                    energy_value = values[value_start:value_end].strip()
+        # Find the starting index of each word in line1 using regex
+        positions = [match.start() for match in re.finditer(r'\S+', head[-1])]
 
-                    # Output the value
-                    st.write(f"Energy Value: {energy_value}")
-                    return energy_value
+        # Search for the first keyword from the list in line1
+        keyword_index = None
+        for keyword in keywords:
+            if keyword in head[-1]:
+                keyword_index = head[-1].find(keyword)
+                break
+
+        if keyword_index is not None:
+            # Extract the value under the matched keyword in line2
+            line2_value = table[-1][keyword_index:].split()[0]  # Get the first word after the keyword column
+            print(f"The value under '{keywords[keywords.index(keyword_index)]}' is: {line2_value}")
+        else:
+            print("No matching keyword found.")
+            
 
         st.warning("Could not find the correct keyword in the header.")
         st.session_state.option = "Manual Extract"  # Switch to manual extraction mode if no match
