@@ -105,20 +105,23 @@ def remove_empty_lines(input_list):
 
 def find_total_energy(page_lines, pdf_path):
     table = []
-    if "option" not in st.session_state:
-        st.session_state.option = "Smart Extract"  # Default to smart extraction
+    head = []
 
-    # Dropdown for choosing extraction mode
+    if "option" not in st.session_state:
+        st.session_state.option = "Smart Extract"
     st.session_state.option = st.selectbox("Select extraction mode", ["Smart Extract", "Manual Extract"], index=["Smart Extract", "Manual Extract"].index(st.session_state.option))
 
     if st.session_state.option == "Smart Extract":
 
         date_pattern = r'^(0?[1-9]|[12][0-9]|3[01])$|(\d{1,2}/\d{1,2}/\d{4})'
         for i, line in enumerate(page_lines):
-            num_match = re.match(r'^\d', line.strip())
+            num_match = re.match(date_pattern, line.strip())
+            total_match = re.search(r'Total', line.strip(), re.IGNORECASE)
             header_match = re.search(r'Energy|Usage|MMBtu', line.strip(), re.IGNORECASE)
-            if num_match or header_match: 
+            if num_match or total_match: 
                 table.append(line)
+            if header_match: 
+                head.append(line)
 
         st.write(table)
 
