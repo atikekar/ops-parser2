@@ -135,11 +135,9 @@ def find_total_energy(page_lines, extract_mode):
 
         if keyword_index is not None:
             # Extract the value under the matched keyword in line2
-            line2_value = table[-1][keyword_index:].split()[0]  # Get the first word after the keyword column
-            print(f"The value under '{keywords[keywords.index(keyword_index)]}' is: {line2_value}")
-        else:
-            print("No matching keyword found.")
-            
+            line2_value = table[-1][keyword_index:].split()[0] 
+            st.write(line2_value)
+
 
         st.warning("Could not find the correct keyword in the header.")
         st.session_state.option = "Manual Extract"  # Switch to manual extraction mode if no match
