@@ -136,8 +136,8 @@ def find_total_energy(page_lines, pdf_path):
         st.write(page_lines)
         energy_value = st.number_input("Enter Total Energy: ", min_value=0, value=0)
         st.write(f"Manually entered energy value: {energy_value}")
-    
-    return energy_value
+
+    return 100
 
             
 # Function to generate page data and CSV
