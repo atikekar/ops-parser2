@@ -104,7 +104,7 @@ def remove_empty_lines(input_list):
     return [line for line in input_list if line.strip()]
 
 def find_total_energy(page_lines, pdf_path):
-    # Check if `option` already exists in session state, if not initialize it
+    table = []
     if "option" not in st.session_state:
         st.session_state.option = "Smart Extract"  # Default to smart extraction
 
@@ -112,48 +112,23 @@ def find_total_energy(page_lines, pdf_path):
     st.session_state.option = st.selectbox("Select extraction mode", ["Smart Extract", "Manual Extract"], index=["Smart Extract", "Manual Extract"].index(st.session_state.option))
 
     if st.session_state.option == "Smart Extract":
-        header_row = -1  # Initialize to -1 to handle the case where no match is found
-        table_values = []
+
         date_pattern = date_pattern = r'^(0?[1-9]|[12][0-9]|3[01])$|(\d{1,2}/\d{1,2}/\d{4})'
         for i, line in enumerate(page_lines):
-            num_match = re.match(date_pattern, line.strip())  # Check if line starts with a digit
-            total_match = re.match(r'Total', line.strip())  # Check for the word "Total"
-            energy_match = re.match(r'Energy|Usage|MMBtu', line.strip(), re.IGNORECASE)
-            
-            if num_match or total_match:
-                if header_row == -1:  # Only capture the first match
-                    header_row = i
-                table_values.append(line)
+            num_match = re.match(date_pattern, line.strip())
+            header_match = re.match(r'Energy|Usage|MMBtu', line.strip(), re.IGNORECASE)
+            if num_match or header_match: 
+                table.append(line)
+        table.split('')
+        st.write(table)
 
-        # If a match was found, append the line before the first match
-        if header_row > 0:  # Ensure there was at least one match
-            table_values.append(page_lines[header_row - 1])
-
-        table_values.append(page_lines[i - 1])
-        st.write(table_values)
-        condensed_table = remove_empty_lines(table_values)
-        
-        # Remove all but the last two lines of table_values
-        condensed_table = condensed_table[-2:]
-
-        header = condensed_table[1]
-        total = condensed_table[0]
-
-        # Match the keyword (Energy, Usage, or MMBtu)
-        match = re.match(r'Energy|Usage|MMBtu', header)
-
-        if match: 
-            energy_end = match.end()
-            closest_number = find_closest_number(total, energy_end)
-            st.write(f"Closest number: {closest_number}")
-
-        else:
-            st.warning("No total energy value found with Smart Extraction. Switching to Manual.")
-            st.session_state.option = "Manual Extract"  # Set to manual mode after warning
-            st.write(page_lines)
-            energy_value = st.number_input("Enter Total Energy: ", min_value=0, value=0)
-            st.write(f"Manually entered energy value: {energy_value}")
-            return energy_value
+    else:
+        st.warning("No total energy value found with Smart Extraction. Switching to Manual.")
+        st.session_state.option = "Manual Extract"  # Set to manual mode after warning
+        st.write(page_lines)
+        energy_value = st.number_input("Enter Total Energy: ", min_value=0, value=0)
+        st.write(f"Manually entered energy value: {energy_value}")
+        return energy_value
 
     if st.session_state.option == "Manual Extract":
         st.write("Manual extraction mode selected.")
