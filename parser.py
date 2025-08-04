@@ -103,13 +103,15 @@ def find_closest_number(page_lines, energy_coordinates):
 def remove_empty_lines(input_list):
     return [line for line in input_list if line.strip()]
 
+
 def find_total_energy(page_lines, pdf_path):
     table = []
     head = []
 
     if "option" not in st.session_state:
         st.session_state.option = "Smart Extract"
-    st.session_state.option = st.selectbox("Select extraction mode", ["Smart Extract", "Manual Extract"], index=["Smart Extract", "Manual Extract"].index(st.session_state.option))
+
+    st.session_state.option = st.selectbox("Select extraction mode", ["Smart Extract", "Manual Extract"], key="extract_mode")
 
     if st.session_state.option == "Smart Extract":
 
