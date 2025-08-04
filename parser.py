@@ -84,11 +84,10 @@ manual = "Manual Extract"
 def find_closest_number(page_lines, energy_coordinates):
     closest_num = None
     closest_distance = float('inf')  # Initialize to a very high number
-    date_pattern = r'^(0?[1-9]|[12][0-9]|3[01])$|(\d{1,2}/\d{1,2}/\d{4})'
-
+    
     for line in page_lines:
         # Look for numbers in the line
-        num_match = re.match(date_pattern, line.strip())  # Match numbers at the beginning of a line
+        num_match = re.match(r'^\d+', line.strip())  # Match numbers at the beginning of a line
         if num_match:
             # Get the number from the line
             number = num_match.group(0)
@@ -115,10 +114,11 @@ def find_total_energy(page_lines, pdf_path):
     if st.session_state.option == "Smart Extract":
         header_row = -1  # Initialize to -1 to handle the case where no match is found
         table_values = []
-        
+        date_pattern = date_pattern = r'^(0?[1-9]|[12][0-9]|3[01])$|(\d{1,2}/\d{1,2}/\d{4})'
         for i, line in enumerate(page_lines):
-            num_match = re.match(r'^\d', line.strip())  # Check if line starts with a digit
+            num_match = re.match(date_pattern, line.strip())  # Check if line starts with a digit
             total_match = re.match(r'Total', line.strip())  # Check for the word "Total"
+            energy_match = re.match(r'Energy|Usage|MMBtu', line.strip(), re.IGNORECASE)
             
             if num_match or total_match:
                 if header_row == -1:  # Only capture the first match
@@ -134,7 +134,7 @@ def find_total_energy(page_lines, pdf_path):
         
         # Remove all but the last two lines of table_values
         condensed_table = condensed_table[-2:]
-        st.write(table_values)
+        st.write(condensed_table)
         header = condensed_table[1]
         total = condensed_table[0]
 
