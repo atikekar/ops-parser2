@@ -124,10 +124,22 @@ def find_total_energy(page_lines, pdf_path):
                 head.append(line)
         
         st.write(table)
-        condense = []
-        condense.append(head[-1])
-        condense.append(table[-1])
-        st.write(condense)
+
+        header = head[-1]
+        values = table[-1]
+        
+        keys = ["Energy", "Usage", "MMBtu", "Rounded"]
+        for key in keys: 
+            index = header.find(key)
+            if index != -1: 
+                start = index
+                while start > 0 and values[start - 1] != ' ': 
+                    start -= 1 
+                end = index
+                while end < len(values) and values[end] != ' ': 
+                    end += 1
+                number = values[start:end].strip()
+                return number 
 
     else:
         st.warning("No total energy value found with Smart Extraction. Switching to Manual.")
