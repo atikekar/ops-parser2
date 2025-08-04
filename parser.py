@@ -128,7 +128,7 @@ def find_total_energy(page_lines, extract_mode):
         keys = ["Energy", "Usage", "MMBtu", "Rounded"]
         for key in keys: 
             index = header.find(key)
-            
+
         if index != -1: 
             start = index
             while start > 0 and values[start - 1] != ' ': 
@@ -137,7 +137,9 @@ def find_total_energy(page_lines, extract_mode):
             while end < len(values) and values[end] != ' ': 
                 end += 1
             number = values[start:end].strip()
-            st.write("Energy Value:", number)
+            st.write(header)
+            st.write(values)
+            st.write("Energy values:", number)
             return number 
 
     else:
