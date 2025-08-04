@@ -120,6 +120,9 @@ def find_total_energy(page_lines, extract_mode):
                 head.append(line)
 
         # Extract the last header and table row
+        st.write(head[-1])
+        st.write(table[-1])
+        
         if head and table:
             header = head[-1].split()
             values = table[-1].split()
