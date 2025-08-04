@@ -80,21 +80,6 @@ def find_name(lines):
 smart = "Smart Extract"
 manual = "Manual Extract"
 
-def find_coordinates(pdf_path, keyword):
-    with pdfplumber.open(pdf_path) as pdf:
-        # Iterate through all the pages in the PDF
-        for page in pdf.pages:
-            # Extract the words and their coordinates
-            words = page.extract_words()
-            
-            # Loop through all words on the page to find the matching keyword
-            for word in words:
-                if re.search(keyword, word['text'], re.IGNORECASE):  # Case-insensitive match
-                    # Return the coordinates of the word (x0, top, x1, bottom)
-                    return (word['x0'], word['top'], word['x1'], word['bottom'])
-                    
-    # If keyword is not found
-    return None
 
 def find_closest_number(page_lines, energy_coordinates):
     closest_num = None
@@ -139,23 +124,28 @@ def find_total_energy(page_lines, pdf_path):
         # If a match was found, append the line before the first match
         if header_row > 0:  # Ensure there was at least one match
             table_values.append(page_lines[header_row - 1])
-        
-        st.write(table_values)
 
         table_values.append(page_lines[i - 1])
         
-        # remove all but the last two lines of table_values
+        # Remove all but the last two lines of table_values
         table_values = table_values[-2:]
+        st.write(table_values)
 
         # Match the keyword (Energy, Usage, or MMBtu)
         match = re.match(r'Energy|Usage|(MMBtu)', table_values[1])
-        energy_coordinates = find_coordinates(pdf_path, match.group(0))
 
-        if energy_coordinates:
-            st.write(f"Energy coordinates: {energy_coordinates}")
-            # Find the closest number aligned with the y-coordinate of energy_coordinates
-            closest_number = find_closest_number(page_lines, energy_coordinates)
-            st.write(f"Closest number: {closest_number}")
+        if match:
+            # Now we need to use pdfplumber to find the coordinates of the matched word
+            energy_end = match.end()
+
+            if energy_end:
+                st.write(f"Energy coordinates: {energy_ends}")
+                # Find the closest number aligned with the y-coordinate of energy_coordinates
+                closest_number = find_closest_number(page_lines, energy_end)
+                st.write(f"Closest number: {closest_number}")
+            else:
+                st.warning("No coordinates found for the keyword 'Energy'.")
+                st.session_state.option = "Manual Extract"  # Set to manual mode after warning
         else:
             st.warning("No total energy value found with Smart Extraction. Switching to Manual.")
             st.session_state.option = "Manual Extract"  # Set to manual mode after warning
