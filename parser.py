@@ -109,33 +109,32 @@ def find_total_energy(page_lines, extract_mode):
         extract_mode = "Smart Extract"
 
     if extract_mode == "Smart Extract":
-
         for i, line in enumerate(page_lines):
-            num_match = re.match(r'^\s*\d+', line)
-            total_match = re.search(r'Total', line, re.IGNORECASE)
-            header_match = re.search(r'Energy|Usage|MMBtu|Quantity|Current', line, re.IGNORECASE)
+            num_match = re.match(r'^\s*\d+', line)  # Match numbers with optional spaces
+            total_match = re.search(r'Total', line, re.IGNORECASE)  # Match "Total"
+            header_match = re.search(r'Energy|Usage|MMBtu|Quantity|Current', line, re.IGNORECASE)  # Match headers
 
             if num_match or total_match:
                 table.append(line)
             if header_match:
                 head.append(line)
 
+        # Extract the last header and table row
         if head and table:
-            header = head[-1]
-            values = table[-1]
+            header = head[-1].split()  # Split header into individual words/columns
+            values = table[-1].split()  # Split last table row into individual values
 
             keys = ["Energy", "Usage", "MMBtu", "Rounded"]
             for key in keys:
                 if key in header:
-                    key_index = header.index(key)
-                    energy_value = values[key_index]
+                    key_index = header.index(key)  # Get the index of the key in the header
+                    energy_value = values[key_index]  # Get the value from the same index in the table row
 
                     st.write(f"Energy Value: {energy_value}")
                     return energy_value
 
         st.warning("Could not find the correct keyword in the header.")
-        st.session_state.option = "Manual Extract"
-
+        st.session_state.option = "Manual Extract"  # Switch to manual extraction mode if no match
 
     if extract_mode == "Manual Extract":
         st.write("Manual extraction mode selected.")
