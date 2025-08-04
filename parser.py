@@ -122,8 +122,8 @@ def find_total_energy(page_lines, pdf_path):
             if header_match: 
                 head.append(line)
 
-        total = list(table[-1])
-        header = list(head[-1])
+        total = list(table[-1].split())
+        header = list(head[-1].split())
         st.write(total)
         st.write(header)
 
