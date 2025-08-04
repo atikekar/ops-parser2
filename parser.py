@@ -121,7 +121,7 @@ def find_total_energy(page_lines, extract_mode):
 
 
         # Extract the last header and table row
-        keywords = ["Energy", "Usage", "MMBtu", "Rounded"]
+        keywords = ["Energy", "Usage", "MMBtu", "Rounded", "Current"]
 
         # Find the starting index of each word in line1 using regex
         positions = [match.start() for match in re.finditer(r'\S+', head[-1])]
