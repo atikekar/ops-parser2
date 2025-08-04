@@ -112,7 +112,7 @@ def find_total_energy(page_lines, extract_mode):
         for i, line in enumerate(page_lines):
             num_match = re.match(r'^\s*\d+', line)  # Match numbers with optional spaces
             total_match = re.search(r'Total', line, re.IGNORECASE)  # Match "Total"
-            header_match = re.search(r'Energy|Usage|MMBtu|Quantity|Current', line, re.IGNORECASE)  # Match headers
+            header_match = re.search(r'Energy|Usage|MMBtu|Quantity|Current', line, re.IGNORECASE)
 
             if num_match or total_match:
                 table.append(line)
@@ -123,13 +123,6 @@ def find_total_energy(page_lines, extract_mode):
         if head and table:
             header = head[-1].split()
             values = table[-1].split()
-
-            header_with_newlines = re.sub(r'\s+', '\n', header)  # Replace one or more spaces with a newline
-            values_with_newlines = re.sub(r'\s+', '\n', values)  # Replace one or more spaces with a newline
-            
-            st.write(header_with_newlines)
-            st.write(values_with_newlines)
-
 
             keys = ["Energy", "Usage", "MMBtu", "Rounded"]
             for key in keys:
