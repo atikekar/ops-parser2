@@ -122,7 +122,9 @@ def find_total_energy(page_lines, extract_mode):
 
         if head and table:
             header = head[-1].split()
+            st.write(header)
             values = table[-1].split()
+            st.write(values)
 
             keys = ["Energy", "Usage", "MMBtu", "Rounded"]
             for key in keys:
