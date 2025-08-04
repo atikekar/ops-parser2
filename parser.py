@@ -119,7 +119,8 @@ def find_total_energy(page_lines, pdf_path):
             header_match = re.match(r'Energy|Usage|MMBtu', line.strip(), re.IGNORECASE)
             if num_match or header_match: 
                 table.append(line)
-        table.split('')
+        for line in table: 
+            line = line.split('')
         st.write(table)
 
     else:
