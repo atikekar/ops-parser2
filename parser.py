@@ -121,10 +121,8 @@ def find_total_energy(page_lines, extract_mode):
 
         # Extract the last header and table row
         if head and table:
-            st.write(head[-1])
-            st.write(table[-1])
-            header = head[-1]
-            values = table[-1]
+            header = head[-1].split()
+            values = table[-1].split()
             st.write(header)
             st.write(values)
 
