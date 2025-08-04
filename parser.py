@@ -114,7 +114,7 @@ def find_total_energy(page_lines, pdf_path):
     if st.session_state.option == "Smart Extract":
 
         for i, line in enumerate(page_lines):
-            num_match = re.match(r'^\d', line)
+            num_match = re.match(r'^\s*\d+', line)
             total_match = re.search(r'Total', line, re.IGNORECASE)
             header_match = re.search(r'Energy|Usage|MMBtu|Quantity|Current', line, re.IGNORECASE)
             st.write(line)
