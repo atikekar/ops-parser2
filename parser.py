@@ -120,16 +120,31 @@ def find_total_energy(page_lines, extract_mode):
                 head.append(line)
 
 
+        # Extract the last header and table row
         if head and table:
-            header = head[-1].split()
-            values = table[-1].split()
+            header = head[-1]  # Get the last header row (as a string)
+            values = table[-1]  # Get the last table row (as a string)
 
             keys = ["Energy", "Usage", "MMBtu", "Rounded"]
             for key in keys:
-                if key in header:
-                    key_index = header.index(key)  # Get the index of the key in the header
-                    energy_value = values[key_index]  # Get the value from the same index in the table row
+                # Find the position of the key in the header (index of the column)
+                index = header.find(key)
+                
+                if index != -1:  # If the key is found in the header
+                    # Use string indexing to find the corresponding value in the table row
+                    value_start = index
+                    # Move backward until we hit a space (start of the value)
+                    while value_start > 0 and values[value_start - 1] != ' ':
+                        value_start -= 1
+                    value_end = index
+                    # Move forward until we hit a space (end of the value)
+                    while value_end < len(values) and values[value_end] != ' ':
+                        value_end += 1
+                    
+                    # Extract the number using the identified indexes
+                    energy_value = values[value_start:value_end].strip()
 
+                    # Output the value
                     st.write(f"Energy Value: {energy_value}")
                     return energy_value
 
