@@ -121,6 +121,8 @@ def find_total_energy(page_lines, extract_mode):
 
         # Extract the last header and table row
         if head and table:
+            head[-1].replace(" ", "X")
+            table[-1].replace(" ", "X")
             header = head[-1].split()  # Split header into individual words/columns
             values = table[-1].split()  # Split last table row into individual values
             st.write(header)
