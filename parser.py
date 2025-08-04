@@ -116,9 +116,14 @@ def find_closest_number(page_lines, energy_coordinates):
     return closest_num
 
 def find_total_energy(page_lines, pdf_path):
-    option = st.selectbox("Select extraction mode", ["Smart Extract", "Manual Extract"])
+    # Check if `option` already exists in session state, if not initialize it
+    if "option" not in st.session_state:
+        st.session_state.option = "Smart Extract"  # Default to smart extraction
 
-    if option == smart:
+    # Dropdown for choosing extraction mode
+    st.session_state.option = st.selectbox("Select extraction mode", ["Smart Extract", "Manual Extract"], index=["Smart Extract", "Manual Extract"].index(st.session_state.option))
+
+    if st.session_state.option == smart:
         header_row = -1  # Initialize to -1 to handle the case where no match is found
         table_values = []
         
@@ -153,9 +158,9 @@ def find_total_energy(page_lines, pdf_path):
             st.write(f"Closest number: {closest_number}")
         else:
             st.warning("No total energy value found with Smart Extraction. Switching to Manual.")
-            option = "Manual Extract"
+            st.session_state.option = "Manual Extract"  # Set to manual mode after warning
 
-    if option == "Manual Extract":
+    if st.session_state.option == "Manual Extract":
         st.write("Manual extraction mode selected.")
         st.write(page_lines)
         energy_value = st.number_input("Enter Total Energy: ", min_value=0, value=0)
