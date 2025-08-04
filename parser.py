@@ -113,13 +113,13 @@ def find_total_energy(page_lines, pdf_path):
 
     if st.session_state.option == "Smart Extract":
 
-        date_pattern = date_pattern = r'^(0?[1-9]|[12][0-9]|3[01])$|(\d{1,2}/\d{1,2}/\d{4})'
+        date_pattern = r'^(0?[1-9]|[12][0-9]|3[01])$|(\d{1,2}/\d{1,2}/\d{4})'
         for i, line in enumerate(page_lines):
             num_match = re.match(date_pattern, line.strip())
             header_match = re.match(r'Energy|Usage|MMBtu', line.strip(), re.IGNORECASE)
             if num_match or header_match: 
                 table.append(line)
-        st.write(table)
+
         for line in table: 
             line = line.split('')
             st.write(line)
