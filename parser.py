@@ -169,15 +169,14 @@ def find_total_energy(page_lines, pdf_path):
     return energy_value
 
             
-
 # Function to generate page data and CSV
-def find_page_data(page, page_num):
+def find_page_data(page, page_num, pdf_path):
     page_data = []
     
     month_in = find_month(page)
     year_in = find_year(page)
     name_in = find_name(page)
-    total_in = find_total_energy(page)
+    total_in = find_total_energy(page, pdf_path)
     page_data.append(Page(page_num, month_in, year_in, name_in, total_in))
 
     return page_data
@@ -230,7 +229,7 @@ def execute():
             page_num = i + 1
 
             progress_bar.progress(min(10 + ((i + 1) * 10), 90), f"Processing page {i + 1} of {len(pdf.pages)}")
-            page_data.extend(find_page_data(lines, page_num))
+            page_data.extend(find_page_data(lines, page_num, input_file))
 
     input_file_name = input_file.name if input_file.name else "extracted_data.pdf"
     csv_name = input_file_name.replace('.pdf', '_data.csv')
