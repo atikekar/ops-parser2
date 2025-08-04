@@ -121,7 +121,7 @@ def find_total_energy(page_lines, pdf_path):
                 table.append(line)
         for line in table: 
             line = line.split('')
-        st.write(table)
+            st.write(line)
 
     else:
         st.warning("No total energy value found with Smart Extraction. Switching to Manual.")
