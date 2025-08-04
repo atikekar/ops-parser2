@@ -134,23 +134,17 @@ def find_total_energy(page_lines, pdf_path):
         # Remove all but the last two lines of table_values
         condensed_table = condensed_table[-2:]
         st.write(condensed_table)
+        header = condensed_table[1]
+        total = condensed_table[0]
 
         # Match the keyword (Energy, Usage, or MMBtu)
-        match = re.match(r'Energy|Usage|(MMBtu)', condensed_table[1])
+        match = re.match(r'Energy|Usage|MMBtu', header)
 
-        if match:
-            # Now we need to use pdfplumber to find the coordinates of the matched word
+        if match: 
             energy_end = match.end()
+            closest_number = find_closest_number(total, energy_end)
+            st.write(f"Closest number: {closest_number}")
 
-            if energy_end:
-                st.write(f"Energy coordinates: {energy_end}")
-                st.write(condensed_table[0])
-                # Find the closest number aligned with the y-coordinate of energy_coordinates
-                closest_number = find_closest_number(condensed_table[0], energy_end)
-                st.write(f"Closest number: {closest_number}")
-            else:
-                st.warning("No coordinates found for the keyword 'Energy'.")
-                st.session_state.option = "Manual Extract"  # Set to manual mode after warning
         else:
             st.warning("No total energy value found with Smart Extraction. Switching to Manual.")
             st.session_state.option = "Manual Extract"  # Set to manual mode after warning
