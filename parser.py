@@ -121,7 +121,7 @@ def find_total_energy(page_lines, pdf_path):
                 table.append(line)
             if header_match: 
                 head.append(line)
-
+        st.write(table)
         condense = []
         condense.append(head[-1])
         condense.append(table[-1])
