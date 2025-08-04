@@ -128,7 +128,6 @@ def find_total_energy(page_lines, pdf_path):
         table_values.append(page_lines[i - 1])
         
         # Remove all but the last two lines of table_values
-        table_values = table_values[-2:]
         st.write(table_values)
 
         # Match the keyword (Energy, Usage, or MMBtu)
