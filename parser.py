@@ -121,7 +121,7 @@ def find_total_energy(page_lines, pdf_path):
                 table.append(line)
 
         for line in table: 
-            line = line.split('')
+            line = line.split(' ')
             st.write(line)
 
     else:
