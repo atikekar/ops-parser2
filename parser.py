@@ -104,16 +104,14 @@ def remove_empty_lines(input_list):
     return [line for line in input_list if line.strip()]
 
 
-def find_total_energy(page_lines, pdf_path):
+def find_total_energy(page_lines, extract_mode):
     table = []
     head = []
 
     if "option" not in st.session_state:
-        st.session_state.option = "Smart Extract"
+        extract_mode = "Smart Extract"
 
-    st.session_state.option = st.selectbox("Select extraction mode", ["Smart Extract", "Manual Extract"], key="extract_mode")
-
-    if st.session_state.option == "Smart Extract":
+    if extract_mode == "Smart Extract":
 
         for i, line in enumerate(page_lines):
             num_match = re.match(r'^\s*\d+', line)
@@ -142,14 +140,9 @@ def find_total_energy(page_lines, pdf_path):
                 return number 
 
     else:
-        st.warning("No total energy value found with Smart Extraction. Switching to Manual.")
-        st.session_state.option = "Manual Extract"  # Set to manual mode after warning
-        st.write(page_lines)
-        energy_value = st.number_input("Enter Total Energy: ", min_value=0, value=0)
-        st.write(f"Manually entered energy value: {energy_value}")
-        return energy_value
+        extract_mode = "Manual Extract"
 
-    if st.session_state.option == "Manual Extract":
+    if extract_mode == "Manual Extract":
         st.write("Manual extraction mode selected.")
         st.write(page_lines)
         energy_value = st.number_input("Enter Total Energy: ", min_value=0, value=0)
@@ -159,13 +152,13 @@ def find_total_energy(page_lines, pdf_path):
 
             
 # Function to generate page data and CSV
-def find_page_data(page, page_num, pdf_path):
+def find_page_data(page, page_num, extract_mode):
     page_data = []
     
     month_in = find_month(page)
     year_in = find_year(page)
     name_in = find_name(page)
-    total_in = find_total_energy(page, pdf_path)
+    total_in = find_total_energy(page, extract_mode)
     page_data.append(Page(page_num, month_in, year_in, name_in, total_in))
 
     return page_data
@@ -196,12 +189,12 @@ def execute():
     st.set_page_config(page_title="Sustainable Gas Ops Document Parser", layout="wide")
     input_file = st.file_uploader("Upload a PDF file", type=["pdf"], key="pdf_uploader")
     input_file_name = str(input_file.name) if input_file else "extracted_data.pdf"
-    #input_path = './sample1.pdf'
-    #input_file = open(input_path, "rb")
 
     if input_file is None: return "No file uploaded. Please upload a PDF file to proceed."
 
     progress_bar = st.progress(0, "Converting PDF to images...")
+
+    extract_mode = st.selectbox("Select extraction mode", ["Smart Extract", "Manual Extract"], key="extract_mode")
 
     page_data = []
 
@@ -218,7 +211,7 @@ def execute():
             page_num = i + 1
 
             progress_bar.progress(min(10 + ((i + 1) * 10), 90), f"Processing page {i + 1} of {len(pdf.pages)}")
-            page_data.extend(find_page_data(lines, page_num, input_file))
+            page_data.extend(find_page_data(lines, page_num, extract_mode))
 
     input_file_name = input_file.name if input_file.name else "extracted_data.pdf"
     csv_name = input_file_name.replace('.pdf', '_data.csv')
