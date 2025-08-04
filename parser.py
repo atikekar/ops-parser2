@@ -128,16 +128,17 @@ def find_total_energy(page_lines, extract_mode):
         keys = ["Energy", "Usage", "MMBtu", "Rounded"]
         for key in keys: 
             index = header.find(key)
-            if index != -1: 
-                start = index
-                while start > 0 and values[start - 1] != ' ': 
-                    start -= 1 
-                end = index
-                while end < len(values) and values[end] != ' ': 
-                    end += 1
-                number = values[start:end].strip()
-                st.write("Energy Value:", number)
-                return number 
+            
+        if index != -1: 
+            start = index
+            while start > 0 and values[start - 1] != ' ': 
+                start -= 1 
+            end = index
+            while end < len(values) and values[end] != ' ': 
+                end += 1
+            number = values[start:end].strip()
+            st.write("Energy Value:", number)
+            return number 
 
     else:
         extract_mode = "Manual Extract"
