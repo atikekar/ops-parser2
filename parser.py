@@ -137,10 +137,12 @@ def find_total_energy(page_lines, extract_mode):
             while end < len(values) and values[end] != ' ': 
                 end += 1
             number = values[start:end].strip()
-            st.write(header)
-            st.write(values)
-            st.write("Energy values:", number)
-            return number 
+            
+        st.write(header)
+        st.write(values)
+        st.write("Energy values:", number)
+        
+        return number 
 
     else:
         extract_mode = "Manual Extract"
