@@ -80,12 +80,45 @@ def find_name(lines):
 smart = "Smart Extract"
 manual = "Manual Extract"
 
+def find_coordinates(pdf_path, keyword):
+    with pdfplumber.open(pdf_path) as pdf:
+        # Iterate through all the pages in the PDF
+        for page in pdf.pages:
+            # Extract the words and their coordinates
+            words = page.extract_words()
+            
+            # Loop through all words on the page to find the matching keyword
+            for word in words:
+                if re.search(keyword, word['text'], re.IGNORECASE):  # Case-insensitive match
+                    # Return the coordinates of the word (x0, top, x1, bottom)
+                    return (word['x0'], word['top'], word['x1'], word['bottom'])
+                    
+    # If keyword is not found
+    return None
 
-def find_total_energy(page_lines):
+def find_closest_number(page_lines, energy_coordinates):
+    closest_num = None
+    closest_distance = float('inf')  # Initialize to a very high number
+    
+    for line in page_lines:
+        # Look for numbers in the line
+        num_match = re.match(r'^\d+', line.strip())  # Match numbers at the beginning of a line
+        if num_match:
+            # Get the number from the line
+            number = num_match.group(0)
+            # You can modify this to calculate the distance between the y-coordinates of the energy keyword and the current line
+            current_coordinates = (0, 0, 0, 0)  # Replace this with the actual coordinates for the current line
+            distance = abs(current_coordinates[1] - energy_coordinates[1])  # Calculate y-axis distance
+            if distance < closest_distance:
+                closest_distance = distance
+                closest_num = number
+    
+    return closest_num
+
+def find_total_energy(page_lines, pdf_path):
     option = st.selectbox("Select extraction mode", ["Smart Extract", "Manual Extract"])
 
     if option == smart:
-        contains_energy = []
         header_row = -1  # Initialize to -1 to handle the case where no match is found
         table_values = []
         
@@ -105,16 +138,29 @@ def find_total_energy(page_lines):
         st.write(table_values)
 
         table_values.append(page_lines[i - 1])
-        st.write(table_values)
         
-        st.warning("No total energy value found with Smart Extraction. Switching to Manual.")
-        option = "Manual Extract"
+        # remove all but the last two lines of table_values
+        table_values = table_values[-2:]
+
+        # Match the keyword (Energy, Usage, or MMBtu)
+        match = re.match(r'Energy|Usage|(MMBtu)', table_values[1])
+        energy_coordinates = find_coordinates(pdf_path, match.group(0))
+
+        if energy_coordinates:
+            st.write(f"Energy coordinates: {energy_coordinates}")
+            # Find the closest number aligned with the y-coordinate of energy_coordinates
+            closest_number = find_closest_number(page_lines, energy_coordinates)
+            st.write(f"Closest number: {closest_number}")
+        else:
+            st.warning("No total energy value found with Smart Extraction. Switching to Manual.")
+            option = "Manual Extract"
 
     if option == "Manual Extract":
         st.write("Manual extraction mode selected.")
         st.write(page_lines)
         energy_value = st.number_input("Enter Total Energy: ", min_value=0, value=0)
         st.write(f"Manually entered energy value: {energy_value}")
+    
     return energy_value
 
             
