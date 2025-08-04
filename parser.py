@@ -123,7 +123,7 @@ def find_total_energy(page_lines, pdf_path):
     # Dropdown for choosing extraction mode
     st.session_state.option = st.selectbox("Select extraction mode", ["Smart Extract", "Manual Extract"], index=["Smart Extract", "Manual Extract"].index(st.session_state.option))
 
-    if st.session_state.option == smart:
+    if st.session_state.option == "Smart Extract":
         header_row = -1  # Initialize to -1 to handle the case where no match is found
         table_values = []
         
