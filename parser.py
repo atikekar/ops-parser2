@@ -84,10 +84,11 @@ manual = "Manual Extract"
 def find_closest_number(page_lines, energy_coordinates):
     closest_num = None
     closest_distance = float('inf')  # Initialize to a very high number
-    
+    date_pattern = r'^(0?[1-9]|[12][0-9]|3[01])$|(\d{1,2}/\d{1,2}/\d{4})'
+
     for line in page_lines:
         # Look for numbers in the line
-        num_match = re.match(r'^\d+', line.strip())  # Match numbers at the beginning of a line
+        num_match = re.match(date_pattern, line.strip())  # Match numbers at the beginning of a line
         if num_match:
             # Get the number from the line
             number = num_match.group(0)
