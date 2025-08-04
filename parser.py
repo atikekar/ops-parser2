@@ -100,9 +100,6 @@ def find_closest_number(page_lines, energy_coordinates):
     
     return closest_num
 
-def remove_empty_lines(input_list):
-    return [line for line in input_list if line.strip()]
-
 
 def find_total_energy(page_lines, extract_mode):
     table = []
@@ -117,39 +114,35 @@ def find_total_energy(page_lines, extract_mode):
             num_match = re.match(r'^\s*\d+', line)
             total_match = re.search(r'Total', line, re.IGNORECASE)
             header_match = re.search(r'Energy|Usage|MMBtu|Quantity|Current', line, re.IGNORECASE)
-            if num_match or total_match: 
+
+            if num_match or total_match:
                 table.append(line)
-            if header_match: 
+            if header_match:
                 head.append(line)
 
-        keys = ["Energy", "Usage", "MMBtu", "Rounded"]
-        for key in keys: 
-            index = head[-1].find(key)
+        if head and table:
+            header = head[-1].split()
+            values = table[-1].split()
 
-        if index != -1: 
-            start = index
-            while start > 0 and table[-1][start - 1] != ' ': 
-                start -= 1 
-            end = index
-            while end < len(table[-1]) and table[-1][end] != ' ': 
-                end += 1
-            number = table[-1][start:end].strip()
+            keys = ["Energy", "Usage", "MMBtu", "Rounded"]
+            for key in keys:
+                if key in header:
+                    key_index = header.index(key)
+                    energy_value = values[key_index]
 
-        st.write(head[-1])
-        st.write(table[-1])
-        if number: st.write(number)
-        else: st.write("No number found")
-        
-        return number 
+                    st.write(f"Energy Value: {energy_value}")
+                    return energy_value
 
-    else:
-        extract_mode = "Manual Extract"
+        st.warning("Could not find the correct keyword in the header.")
+        st.session_state.option = "Manual Extract"
+
 
     if extract_mode == "Manual Extract":
         st.write("Manual extraction mode selected.")
         st.write(page_lines)
         energy_value = st.number_input("Enter Total Energy: ", min_value=0, value=0)
         st.write(f"Manually entered energy value: {energy_value}")
+        return energy_value
 
     return 100
 
@@ -184,7 +177,6 @@ def save_to_csv(page_data, output_csv_path):
     df.to_csv("extracted_data.csv", index=False)
 
 
-# Main function to execute the Streamlit app
 def execute():
     st.title("Sustainable Gas Ops Document Parser")
     st.write("This application processes PDF files to extract relevant data and convert it into a CSV file.")
@@ -193,7 +185,8 @@ def execute():
     input_file = st.file_uploader("Upload a PDF file", type=["pdf"], key="pdf_uploader")
     input_file_name = str(input_file.name) if input_file else "extracted_data.pdf"
 
-    if input_file is None: return "No file uploaded. Please upload a PDF file to proceed."
+    if input_file is None:
+        return "No file uploaded. Please upload a PDF file to proceed."
 
     progress_bar = st.progress(0, "Converting PDF to images...")
 
@@ -229,6 +222,5 @@ def execute():
         file_name=csv_name,
         mime='text/csv'
 )
-
 
 execute()
