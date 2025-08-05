@@ -67,13 +67,15 @@ def find_name(lines):
         if match:
             name = line.split(':')[-1].strip()
             matches.append(name)
+    
     if not matches:
         st.write("No name found in the text")
         st.text_input("Enter the name manually:", key="name_input")
         pdf_title = st.session_state.get("name_input", "Unknown Name")
         return pdf_title
     else:
-        return matches[0]
+        names = matches[0].split("     ")
+        return names[0]
 
 
 # Define the options for extraction
