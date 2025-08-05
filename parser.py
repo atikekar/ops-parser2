@@ -27,7 +27,7 @@ def find_month(lines):
         match = re.search(numeric_month_pattern, line)
         if match:
             month_number = match.group(1)
-            month_name_found = month_name[int(month_number)]  # Get month name from month_number
+            month_name_found = month_name[int(month_number)]
             matches.append(month_name_found)
     if matches:
         return max(set(matches), key=matches.count)
@@ -82,14 +82,9 @@ def find_total_energy(page_lines, extract_mode):
             if header_match:
                 head.append(line)
 
-
-        # Extract the last header and table row
         keywords = ["Energy", "Usage", "MMBtu", "Rounded", "Current"]
-
-        # Find the starting index of each word in line1 using regex
         positions = [match.start() for match in re.finditer(r'\S+', head[-1])]
 
-        # Search for the first keyword from the list in line1
         keyword_index = None
         for keyword in keywords:
             if keyword in head[-1]:
@@ -97,15 +92,13 @@ def find_total_energy(page_lines, extract_mode):
                 break
 
         if keyword_index is not None:
-            # Extract the value under the matched keyword in line2
             line2_value = table[-1][keyword_index - 2:].split()[0] 
             return line2_value
         else:
             st.warning("Could not find the correct keyword in the header.")
-            st.session_state.option = "Manual Extract"  # Switch to manual extraction mode if no match
+            st.session_state.option = "Manual Extract"
 
     if extract_mode == "Manual Extract":
-        st.write("Manual extraction mode selected.")
         st.write(page_lines)
         energy_value = st.number_input("Enter Total Energy: ", min_value=0, value=0)
         st.write(f"Manually entered energy value: {energy_value}")
@@ -140,6 +133,7 @@ def save_to_csv(page_data, output_csv_path):
 
 
 def execute():
+    st.image('./logo.png')
     st.title("Sustainable Gas Ops Document Parser")
     st.write("This application processes PDF files to extract relevant data and convert it into a CSV file.")
 
