@@ -133,7 +133,7 @@ def save_to_csv(page_data, output_csv_path):
 
 
 def execute():
-    st.image('./logo.png')
+    st.image('./logo.jpeg')
     st.title("Sustainable Gas Ops Document Parser")
     st.write("This application processes PDF files to extract relevant data and convert it into a CSV file.")
 
