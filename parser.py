@@ -99,7 +99,6 @@ def find_total_energy(page_lines, extract_mode):
         if keyword_index is not None:
             # Extract the value under the matched keyword in line2
             line2_value = table[-1][keyword_index - 2:].split()[0] 
-            st.write(line2_value)
             return line2_value
         else:
             st.warning("Could not find the correct keyword in the header.")
