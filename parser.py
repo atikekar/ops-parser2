@@ -133,7 +133,7 @@ def save_to_csv(page_data, output_csv_path):
 
 
 def execute():
-    st.image('./logo.jpg')
+    st.image('./logo.jpg', use_column_width=True)
     st.title("Sustainable Gas Ops Document Parser")
 
     st.set_page_config(page_title="Sustainable Gas Ops Document Parser", layout="wide")
