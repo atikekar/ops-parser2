@@ -133,6 +133,16 @@ def save_to_csv(page_data, output_csv_path):
 
 
 def execute():
+    st.markdown(
+    """
+    <style>
+    body {
+        background-color: lightblue;
+    }
+    </style>
+    """, 
+    unsafe_allow_html=True
+    )
     st.image('./logo.jpg', use_container_width=True)
     st.title("Sustainable Gas Ops Document Parser")
 
