@@ -69,7 +69,6 @@ def find_total_energy(page_lines, extract_mode):
     head = []
 
     if extract_mode == "Select Mode":
-        st.warning("Please select an extraction mode (Smart or Manual).")
         return None
 
     if extract_mode == "Smart Extract":
@@ -91,7 +90,6 @@ def find_total_energy(page_lines, extract_mode):
             if keyword in head[-1]:
                 keyword_index = head[-1].find(keyword)
                 break
-        st.write("Made it here")
         if keyword_index is not None:
             line2_value = table[-1][keyword_index - 2:].split()[0]
             return line2_value
