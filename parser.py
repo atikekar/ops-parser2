@@ -165,8 +165,8 @@ def save_to_csv(page_data, output_csv_path):
         for page in page_data:
             csv_data.append({
                 "Page": page_num,
-                "Month": page.month,
-                "Month Num": 1,
+                "Month Name": page.month,
+                "Month": page.month_num,
                 "Year": page.year,
                 "Name": page.name,
                 "Total Energy": page.total
