@@ -122,6 +122,7 @@ def find_total_energy(page_lines, extract_mode, page_num):
             return energy_value
     except Exception as e:
         st.error(f"Error in find_total_energy: {str(e)}")
+        extract_mode = "Manual Extract"
     return None
 
 def find_page_data(page, page_num, extract_mode):
