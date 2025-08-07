@@ -128,19 +128,28 @@ def find_total_energy(page_lines, extract_mode, page_num):
         st.error(f"Error in Smart Extraction, try Manual Extraction")
     return None
 
-def month_name_to_int(month_name_str):
-    month_name_str = month_name_str.capitalize()
-    if month_name_str in month_name:
-        return month_name.index(month_name_str)
-    else:
-        return None
+def translate_month(month_in):
+    month_mapping = {
+        "January": 1,
+        "February": 2,
+        "March": 3,
+        "April": 4,
+        "May": 5,
+        "June": 6,
+        "July": 7,
+        "August": 8,
+        "September": 9,
+        "October": 10,
+        "November": 11,
+        "December": 12
+    }
+    return month_mapping.get(month_in.capitalize(), None)
 
 def find_page_data(page, page_num, extract_mode):
     page_data = []
     try:
         month_in = find_month(page, page_num)
-        month_num = month_name_to_int(month_in)
-        if month_num is None: st.write(month_in)
+        month_num = translate_month(month_in)
         year_in = find_year(page, page_num)
         name_in = find_name(page, page_num)
         total_in = find_total_energy(page, extract_mode, page_num)
