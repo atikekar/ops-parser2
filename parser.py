@@ -58,7 +58,9 @@ def find_name(lines):
             matches.append(name)
 
     if not matches:
-        match_2 = re.search(r'Account Name', line, re.IGNORECASE)
+        for line in lines: 
+            match_2 = re.search(r'Account Name', line, re.IGNORECASE)
+            
         if match_2:
             name = next(line)
             pdf_title = re.search(r'([A-Za-z\s]+)', name)
