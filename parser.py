@@ -5,6 +5,9 @@ from io import BytesIO
 import pdfplumber
 from calendar import month_name
 
+#add month date
+#final fixes 
+#add account name extractor 
 
 class Page:
     def __init__(self, page_in, month_in, year_in, name_in, total_in):
@@ -55,10 +58,18 @@ def find_name(lines):
             matches.append(name)
 
     if not matches:
-        st.write("No name found in the text")
-        st.text_input("Enter the name manually:", key="name_input")
-        pdf_title = st.session_state.get("name_input", "Unknown Name")
-        return pdf_title
+        match_2 = re.search(r'Account Name', line, re.IGNORECASE)
+        if match_2:
+            name = next(line)
+            pdf_title = re.search(r'([A-Za-z\s]+)', name)
+            if pdf_title:
+                account_name = pdf_title.group(1)
+                return account_name 
+        else: 
+            st.write("No name found in the text")
+            st.text_input("Enter the name manually:", key="name_input")
+            pdf_title = st.session_state.get("name_input", "Unknown Name")
+            return pdf_title
     else:
         names = matches[0].split("      ")
         return names[0]
