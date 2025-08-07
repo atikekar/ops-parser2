@@ -58,16 +58,16 @@ def find_name(lines):
             matches.append(name)
 
     if not matches:
-        for line in lines: 
+        for line in lines:
             match_2 = re.search(r'Account Name', line, re.IGNORECASE)
-            if match_2: st.write(match_2)
-
+            
         if match_2:
-            name = next(line)
-            pdf_title = re.search(r'([A-Za-z\s]+)', name)
-            if pdf_title:
-                account_name = pdf_title.group(1)
-                return account_name 
+            st.write(match_2)
+            name = next(lines)
+            span = match_2.span()
+            pdf_title = name[span[0] - 5: span[1] + 5]
+            return pdf_title
+
         else: 
             st.write("No name found in the text")
             st.text_input("Enter the name manually:", key="name_input")
