@@ -7,7 +7,6 @@ from calendar import month_name
 
 #add month date
 #final fixes 
-#add account name extractor 
 
 class Page:
     def __init__(self, page_in, month_in, year_in, name_in, total_in):
@@ -77,7 +76,7 @@ def find_name(lines):
         return names[0]
 
 
-def find_total_energy(page_lines, extract_mode):
+def find_total_energy(page_lines, extract_mode, page_num):
     table = []
     head = []
 
@@ -109,7 +108,7 @@ def find_total_energy(page_lines, extract_mode):
 
     elif extract_mode == "Manual Extract":
         st.write(page_lines)
-        energy_value = st.number_input("Enter Total Energy: ", min_value=0, value=0)
+        energy_value = st.number_input("Enter Total Energy: ", min_value=0.0, key=f"energy_input_{page_num}")
         st.write(f"Manually entered energy value: {energy_value}")
         return energy_value
 
@@ -119,7 +118,7 @@ def find_page_data(page, page_num, extract_mode):
     month_in = find_month(page)
     year_in = find_year(page)
     name_in = find_name(page)
-    total_in = find_total_energy(page, extract_mode)
+    total_in = find_total_energy(page, extract_mode, page_num)
     page_data.append(Page(page_num, month_in, year_in, name_in, total_in))
     return page_data
 
