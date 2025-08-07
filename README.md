@@ -44,38 +44,38 @@ bash
 
 ## Functions Overview
 
-- 'find_month(lines)' - Extracts the month from the PDF lines using regex. It supports both named months (e.g., "January") and numeric representations (e.g., "01/01/2021").
+- **find_month(lines)** - Extracts the month from the PDF lines using regex. It supports both named months (e.g., "January") and numeric representations (e.g., "01/01/2021").
 
-- 'find_year(lines)' - Extracts the year from the PDF lines using regex. It looks for a 4-digit year in the text (e.g., 2021).
+- **find_year(lines)** - Extracts the year from the PDF lines using regex. It looks for a 4-digit year in the text (e.g., 2021).
 
-- 'find_name(lines)' - Identifies the name of the facility or operator. It looks for lines containing Name:, Operator:, or Facility.
+- **find_name(lines)** - Identifies the name of the facility or operator. It looks for lines containing Name:, Operator:, or Facility.
 
-- 'find_total_energy(page_lines, extract_mode)' - Extracts the total energy value based on the selected extraction mode. In Smart Extract mode, it searches the header for keywords and tries to extract the value. In Manual Extract mode, the user is prompted to manually enter the value.
+- **find_total_energy(page_lines, extract_mode)** - Extracts the total energy value based on the selected extraction mode. In Smart Extract mode, it searches the header for keywords and tries to extract the value. In Manual Extract mode, the user is prompted to manually enter the value.
 
-- 'find_page_data(page, page_num, extract_mode)' - Collects data from each page: month, year, name, and total energy value. This data is stored in an instance of the Page class.
+- **find_page_data(page, page_num, extract_mode)** - Collects data from each page: month, year, name, and total energy value. This data is stored in an instance of the Page class.
 
-- 'save_to_csv(page_data, output_csv_path)' - Saves the extracted data into a CSV file. The CSV file includes columns for the page number, month, year, name, and total energy.
+- **save_to_csv(page_data, output_csv_path)** - Saves the extracted data into a CSV file. The CSV file includes columns for the page number, month, year, name, and total energy.
 
-- 'execute()' - Main function that powers the Streamlit app. It loads the PDF, processes each page, and saves the extracted data into a CSV file. Users can download the CSV once the process is complete.
+- **execute()** - Main function that powers the Streamlit app. It loads the PDF, processes each page, and saves the extracted data into a CSV file. Users can download the CSV once the process is complete.
 
 ## Example Usage
 
-# Run the app:
+### Run the app:
 Launch the Streamlit app by running:
 
 bash
 streamlit run parser.py
 
-## Upload the PDF:
+### Upload the PDF:
 Once the app is running, upload the PDF containing the invoice data.
 
-# Choose Extraction Mode:
+### Choose Extraction Mode:
 Select the Smart Extract mode for automated extraction or Manual Extract for manual input.
 
-# Download the CSV:
+### Download the CSV:
 After the data is processed, download the CSV file with the extracted data.
 
-# File Output
+### File Output
 The extracted data is saved as a CSV file with the following columns:
 
 - 'Page:' The page number.
