@@ -19,50 +19,54 @@ Ensure you have the following libraries installed:
 
 You can install these dependencies using pip:
 
-```bash
-pip install streamlit pandas pdfplumber
-How It Works
-Input: The user uploads a PDF file containing the gas operations invoice.
+bash
 
-Keyword Search: The program looks for the columns containing one of the following keywords:
+'pip install -r requirements.txt'
 
-Energy
+## How It Works
+- Input: The user uploads a PDF file containing the gas operations invoice.
 
-MMBtu
+**Keyword Search**: The program looks for the columns containing one of the following keywords:
 
-Usage
+- 'Energy'
 
-Scheduled
+- 'MMBtu'
 
-Rounded
+- 'Usage'
 
-Extraction: The program extracts the total value from the identified column in either Smart or Manual mode.
+- 'Scheduled'
 
-Output: The extracted data is saved to a CSV file and made available for download.
+- 'Rounded'
 
-Functions Overview
-find_month(lines)
+**Extraction**: The program extracts the total value from the identified column in either Smart or Manual mode.
+
+**Output**: The extracted data is saved to a CSV file and made available for download.
+
+## Functions Overview
+
+- find_month(lines)
 Extracts the month from the PDF lines using regex. It supports both named months (e.g., "January") and numeric representations (e.g., "01/01/2021").
 
-find_year(lines)
+- find_year(lines)
 Extracts the year from the PDF lines using regex. It looks for a 4-digit year in the text (e.g., 2021).
 
-find_name(lines)
+- find_name(lines)
 Identifies the name of the facility or operator. It looks for lines containing Name:, Operator:, or Facility.
 
-find_total_energy(page_lines, extract_mode)
+- find_total_energy(page_lines, extract_mode)
 Extracts the total energy value based on the selected extraction mode. In Smart Extract mode, it searches the header for keywords and tries to extract the value. In Manual Extract mode, the user is prompted to manually enter the value.
 
-find_page_data(page, page_num, extract_mode)
+- find_page_data(page, page_num, extract_mode)
 Collects data from each page: month, year, name, and total energy value. This data is stored in an instance of the Page class.
 
-save_to_csv(page_data, output_csv_path)
+- save_to_csv(page_data, output_csv_path)
 Saves the extracted data into a CSV file. The CSV file includes columns for the page number, month, year, name, and total energy.
 
-execute()
+- execute()
 Main function that powers the Streamlit app. It loads the PDF, processes each page, and saves the extracted data into a CSV file. Users can download the CSV once the process is complete.
 
-Example Usage
+## Example Usage
+
 Run the app:
 Launch the Streamlit app by running:
 
@@ -81,13 +85,13 @@ After the data is processed, download the CSV file with the extracted data.
 File Output
 The extracted data is saved as a CSV file with the following columns:
 
-Page: The page number.
+- 'Page': The page number.
 
-Month: The month extracted from the page.
+- 'Month': The month extracted from the page.
 
-Year: The year extracted from the page.
+- 'Year': The year extracted from the page.
 
-Name: The name of the operator or facility.
+- 'Name': The name of the operator or facility.
 
 Total Energy: The extracted total energy value.
 
