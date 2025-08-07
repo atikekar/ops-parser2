@@ -62,7 +62,7 @@ def find_name(lines):
             match_2 = re.search(r'Account Name', line, re.IGNORECASE)
             if match_2:
                 st.write(match_2)
-                name = next(lines)
+                name = next(line)
                 span = match_2.span()
                 pdf_title = name[span[0] - 5: span[1] + 5]
                 return pdf_title
