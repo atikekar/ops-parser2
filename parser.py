@@ -104,12 +104,12 @@ def find_total_energy(page_lines, extract_mode, page_num):
             return line2_value
         else:
             st.warning("Could not find the correct keyword in the header.")
-            st.session_state.extract_mode = "Manual Extract"  # Automatically switch to Manual Extract if Smart fails
+            st.session_state.extract_mode = "Manual Extract"
 
     elif extract_mode == "Manual Extract":
-        st.write(page_lines)
+        lines = [line for line in lines if line.strip() != '']
+        st.write(lines)
         energy_value = st.number_input("Enter Total Energy: ", min_value=0.0, key=f"energy_input_{page_num}")
-        st.write(f"Manually entered energy value: {energy_value}")
         return energy_value
 
 
