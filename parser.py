@@ -68,9 +68,6 @@ def find_total_energy(page_lines, extract_mode):
     table = []
     head = []
 
-    if extract_mode == "Select Mode":
-        return None
-
     if extract_mode == "Smart Extract":
         for i, line in enumerate(page_lines):
             num_match = re.match(r'^\s*\d+', line)  # Match numbers with optional spaces
@@ -142,7 +139,7 @@ def execute():
     if input_file is None:
         return "No file uploaded. Please upload a PDF file to proceed."
 
-    extract_mode = st.selectbox("Select extraction mode", ["Select Mode", "Smart Extract", "Manual Extract"], key="extract_mode")
+    extract_mode = st.selectbox("Select extraction mode", ["Smart Extract", "Manual Extract"], key="extract_mode")
 
     page_data = []
 
