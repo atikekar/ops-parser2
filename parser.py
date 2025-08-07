@@ -6,9 +6,10 @@ import pdfplumber
 from calendar import month_name
 
 class Page:
-    def __init__(self, page_in, month_in, year_in, name_in, total_in):
+    def __init__(self, page_in, month_in, month_num_in, year_in, name_in, total_in):
         self.page = page_in
         self.month = month_in
+        self.month_num = month_num_in
         self.year = year_in
         self.name = name_in
         self.total = total_in
@@ -127,11 +128,19 @@ def find_total_energy(page_lines, extract_mode, page_num):
         st.error(f"Error in Smart Extraction, try Manual Extraction")
     return None
 
+def month_name_to_int(month_name_str):
+    month_name_str = month_name_str.capitalize()
+    if month_name_str in month_name:
+        return month_name.index(month_name_str)
+    else:
+        return None
+
 
 def find_page_data(page, page_num, extract_mode):
     page_data = []
     try:
         month_in = find_month(page, page_num)
+        month_num = month_name_to_int(month_in)
         year_in = find_year(page, page_num)
         name_in = find_name(page, page_num)
         total_in = find_total_energy(page, extract_mode, page_num)
@@ -149,6 +158,7 @@ def save_to_csv(page_data, output_csv_path):
             csv_data.append({
                 "Page": page_num,
                 "Month": page.month,
+                "Month Num": page.month_num,
                 "Year": page.year,
                 "Name": page.name,
                 "Total Energy": page.total
