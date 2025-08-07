@@ -140,6 +140,7 @@ def find_page_data(page, page_num, extract_mode):
     try:
         month_in = find_month(page, page_num)
         month_num = month_name_to_int(month_in)
+        if month_num is None: st.write(month_in)
         year_in = find_year(page, page_num)
         name_in = find_name(page, page_num)
         total_in = find_total_energy(page, extract_mode, page_num)
