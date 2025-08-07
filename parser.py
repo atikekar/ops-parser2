@@ -69,7 +69,7 @@ def find_total_energy(page_lines, extract_mode):
     head = []
 
     if "option" not in st.session_state:
-        extract_mode = "Smart Extract"
+        extract_mode = "Select Mode"
 
     while extract_mode == "Smart Extract":
         for i, line in enumerate(page_lines):
@@ -143,7 +143,7 @@ def execute():
     if input_file is None:
         return "No file uploaded. Please upload a PDF file to proceed."
 
-    extract_mode = st.selectbox("Select extraction mode", ["Smart Extract", "Manual Extract"], key="extract_mode")
+    extract_mode = st.selectbox("Select extraction mode", ["Smart Extract", "Manual Extract", "Select Mode"], key="extract_mode")
 
     page_data = []
 
