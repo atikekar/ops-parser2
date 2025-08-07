@@ -13,7 +13,7 @@ class Page:
         self.name = name_in
         self.total = total_in
 
-def find_month(lines):
+def find_month(lines, page_num):
     matches = []
     try:
         for line in lines:
@@ -33,10 +33,11 @@ def find_month(lines):
         if matches:
             return max(set(matches), key=matches.count)
     except Exception as e:
-        st.error(f"Error in find_month: {str(e)}")
-    return None
+        st.error(f"Couldn't Find Month")
+        error_month = st.number_input(f"Enter Month For Page {page_num}: ", min_value=0.0, key=f"month_{page_num}")
+        return error_month
 
-def find_year(lines):
+def find_year(lines, page_num):
     matches = []
     try:
         for line in lines:
@@ -49,10 +50,11 @@ def find_year(lines):
         if matches:
             return max(set(matches), key=matches.count)
     except Exception as e:
-        st.error(f"Error in find_year: {str(e)}")
-    return None
+        st.error(f"Couldn't Find Year")
+        error_year = st.number_input(f"Enter Year For Page {page_num}: ", min_value=0.0, key=f"year_{page_num}")
+        return error_year
 
-def find_name(lines):
+def find_name(lines, page_num):
     matches = []
     try:
         for line in lines:
@@ -80,8 +82,9 @@ def find_name(lines):
             names = matches[0].split("      ")
             return names[0]
     except Exception as e:
-        st.error(f"Error in find_name: {str(e)}")
-    return "Unknown Name"
+        st.error(f"Couldn't Find Name")
+        error_name = st.number_input(f"Enter Name For Page {page_num}: ", min_value=0.0, key=f"name_{page_num}")
+        return error_name
 
 def find_total_energy(page_lines, extract_mode, page_num):
     table = []
@@ -121,9 +124,9 @@ def find_total_energy(page_lines, extract_mode, page_num):
             energy_value = st.number_input(f"Enter Total Energy For Page {page_num}: ", min_value=0.0, key=f"energy_input_{page_num}")
             return energy_value
     except Exception as e:
-        st.error(f"Error in find_total_energy: {str(e)}")
-        extract_mode = "Manual Extract"
+        st.error(f"Error in Smart Extraction, try Manual Extraction")
     return None
+
 
 def find_page_data(page, page_num, extract_mode):
     page_data = []
@@ -136,6 +139,7 @@ def find_page_data(page, page_num, extract_mode):
     except Exception as e:
         st.error(f"Error in find_page_data: {str(e)}")
     return page_data
+
 
 def save_to_csv(page_data, output_csv_path):
     try:
@@ -155,6 +159,7 @@ def save_to_csv(page_data, output_csv_path):
         df.to_csv("extracted_data.csv", index=False)
     except Exception as e:
         st.error(f"Error in save_to_csv: {str(e)}")
+
 
 def execute():
     try:
