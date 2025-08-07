@@ -135,7 +135,6 @@ def month_name_to_int(month_name_str):
     else:
         return None
 
-
 def find_page_data(page, page_num, extract_mode):
     page_data = []
     try:
@@ -148,7 +147,6 @@ def find_page_data(page, page_num, extract_mode):
     except Exception as e:
         st.error(f"Error in find_page_data: {str(e)}")
     return page_data
-
 
 def save_to_csv(page_data, output_csv_path):
     try:
@@ -169,7 +167,6 @@ def save_to_csv(page_data, output_csv_path):
         df.to_csv("extracted_data.csv", index=False)
     except Exception as e:
         st.error(f"Error in save_to_csv: {str(e)}")
-
 
 def execute():
     try:
