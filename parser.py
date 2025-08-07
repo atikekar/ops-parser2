@@ -144,7 +144,7 @@ def find_page_data(page, page_num, extract_mode):
         year_in = find_year(page, page_num)
         name_in = find_name(page, page_num)
         total_in = find_total_energy(page, extract_mode, page_num)
-        page_data.append(Page(page_num, month_in, year_in, name_in, total_in))
+        page_data.append(Page(page_num, month_in, month_num, year_in, name_in, total_in))
     except Exception as e:
         st.error(f"Error in find_page_data: {str(e)}")
     return page_data
