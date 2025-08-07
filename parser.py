@@ -107,8 +107,8 @@ def find_total_energy(page_lines, extract_mode, page_num):
             st.session_state.extract_mode = "Manual Extract"
 
     elif extract_mode == "Manual Extract":
-        lines = [line for line in lines if line.strip() != '']
-        st.write(lines)
+        stripped_lines = [line for line in page_lines if line.strip() != '']
+        st.write(stripped_lines)
         energy_value = st.number_input("Enter Total Energy: ", min_value=0.0, key=f"energy_input_{page_num}")
         return energy_value
 
