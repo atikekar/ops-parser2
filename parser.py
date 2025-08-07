@@ -175,6 +175,7 @@ def save_to_csv(page_data, output_csv_path):
         df = pd.DataFrame(csv_data)
         df.to_csv(output_csv_path, index=False)
         df.to_csv("extracted_data.csv", index=False)
+        return df
     except Exception as e:
         st.error(f"Error in save_to_csv: {str(e)}")
 
@@ -208,7 +209,7 @@ def execute():
         input_file_name = input_file.name if input_file.name else "extracted_data.pdf"
         csv_name = input_file_name.replace('.pdf', '_data.csv')
         output_csv_path = "/tmp/extracted_data.csv"
-        save_to_csv(page_data, output_csv_path)
+        df = save_to_csv(page_data, output_csv_path)
 
         st.download_button(
             label="Download CSV File",
@@ -216,6 +217,10 @@ def execute():
             file_name=csv_name,
             mime='text/csv'
         )
+
+        st.write("Result Data Table: ")
+        st.write(df)
+
     except Exception as e:
         st.error(f"Error in execute function: {str(e)}")
 
