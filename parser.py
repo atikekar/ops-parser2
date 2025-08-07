@@ -71,7 +71,7 @@ def find_total_energy(page_lines, extract_mode):
     if "option" not in st.session_state:
         extract_mode = "Smart Extract"
 
-    if extract_mode == "Smart Extract":
+    while extract_mode == "Smart Extract":
         for i, line in enumerate(page_lines):
             num_match = re.match(r'^\s*\d+', line)  # Match numbers with optional spaces
             total_match = re.search(r'Total', line, re.IGNORECASE)  # Match "Total"
@@ -98,7 +98,7 @@ def find_total_energy(page_lines, extract_mode):
             st.warning("Could not find the correct keyword in the header.")
             st.session_state.option = "Manual Extract"
 
-    if extract_mode == "Manual Extract":
+    while extract_mode == "Manual Extract":
         st.write(page_lines)
         energy_value = st.number_input("Enter Total Energy: ", min_value=0, value=0)
         st.write(f"Manually entered energy value: {energy_value}")
