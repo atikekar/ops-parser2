@@ -79,7 +79,7 @@ def find_name(lines, page_num):
             pdf_title = st.session_state.get("name_input", "Unknown Name")
             return pdf_title
         else:
-            names = matches[0].split("      ")
+            names = matches[0].split("         ")
             return names[0]
     except Exception as e:
         st.error(f"Couldn't Find Name")
@@ -120,7 +120,8 @@ def find_total_energy(page_lines, extract_mode, page_num):
 
         elif extract_mode == "Manual Extract":
             stripped_lines = [line for line in page_lines if line.strip() != '']
-            st.write(stripped_lines)
+            #st.write(stripped_lines)
+            st.text_area(stripped_lines)
             energy_value = st.number_input(f"Enter Total Energy For Page {page_num}: ", min_value=0.0, key=f"energy_input_{page_num}")
             return energy_value
     except Exception as e:
