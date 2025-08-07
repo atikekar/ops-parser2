@@ -68,42 +68,42 @@ def find_total_energy(page_lines, extract_mode):
     table = []
     head = []
 
-    if "option" not in st.session_state:
-        extract_mode = "Select Mode"
+    if extract_mode == "Select Mode":
+        st.warning("Please select an extraction mode (Smart or Manual).")
+        return None
 
-    while True: 
-        if extract_mode == "Smart Extract":
-            for i, line in enumerate(page_lines):
-                num_match = re.match(r'^\s*\d+', line)  # Match numbers with optional spaces
-                total_match = re.search(r'Total', line, re.IGNORECASE)  # Match "Total"
-                header_match = re.search(r'Energy|Usage|MMBtu|Quantity|Current', line, re.IGNORECASE)
+    if extract_mode == "Smart Extract":
+        for i, line in enumerate(page_lines):
+            num_match = re.match(r'^\s*\d+', line)  # Match numbers with optional spaces
+            total_match = re.search(r'Total', line, re.IGNORECASE)  # Match "Total"
+            header_match = re.search(r'Energy|Usage|MMBtu|Quantity|Current', line, re.IGNORECASE)
 
-                if num_match or total_match:
-                    table.append(line)
-                if header_match:
-                    head.append(line)
+            if num_match or total_match:
+                table.append(line)
+            if header_match:
+                head.append(line)
 
-            keywords = ["Energy", "Usage", "MMBtu", "Rounded", "Current"]
-            positions = [match.start() for match in re.finditer(r'\S+', head[-1])]
+        keywords = ["Energy", "Usage", "MMBtu", "Rounded", "Current"]
+        positions = [match.start() for match in re.finditer(r'\S+', head[-1])]
 
-            keyword_index = None
-            for keyword in keywords:
-                if keyword in head[-1]:
-                    keyword_index = head[-1].find(keyword)
-                    break
+        keyword_index = None
+        for keyword in keywords:
+            if keyword in head[-1]:
+                keyword_index = head[-1].find(keyword)
+                break
 
-            if keyword_index is not None:
-                line2_value = table[-1][keyword_index - 2:].split()[0] 
-                return line2_value
-            else:
-                st.warning("Could not find the correct keyword in the header.")
-                st.session_state.option = "Manual Extract"
+        if keyword_index is not None:
+            line2_value = table[-1][keyword_index - 2:].split()[0]
+            return line2_value
+        else:
+            st.warning("Could not find the correct keyword in the header.")
+            st.session_state.extract_mode = "Manual Extract"  # Automatically switch to Manual Extract if Smart fails
 
-        if extract_mode == "Manual Extract":
-            st.write(page_lines)
-            energy_value = st.number_input("Enter Total Energy: ", min_value=0, value=0)
-            st.write(f"Manually entered energy value: {energy_value}")
-            return energy_value
+    elif extract_mode == "Manual Extract":
+        st.write(page_lines)
+        energy_value = st.number_input("Enter Total Energy: ", min_value=0, value=0)
+        st.write(f"Manually entered energy value: {energy_value}")
+        return energy_value
 
 
 def find_page_data(page, page_num, extract_mode):
@@ -144,7 +144,7 @@ def execute():
     if input_file is None:
         return "No file uploaded. Please upload a PDF file to proceed."
 
-    extract_mode = st.selectbox("Select extraction mode", [ "Select Mode", "Smart Extract", "Manual Extract"], key="extract_mode")
+    extract_mode = st.selectbox("Select extraction mode", ["Select Mode", "Smart Extract", "Manual Extract"], key="extract_mode")
 
     page_data = []
 
