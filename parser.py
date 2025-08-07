@@ -59,8 +59,8 @@ def find_name(lines):
 
     if not matches:
         for line in lines: 
-            st.write(lines)
             match_2 = re.search(r'Account Name', line, re.IGNORECASE)
+            if match_2: st.write(match_2)
 
         if match_2:
             name = next(line)
